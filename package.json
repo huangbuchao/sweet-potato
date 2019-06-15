@@ -1,0 +1,29 @@
+{
+  "name": "sweet-potato",
+  "version": "1.0.0",
+  "description": "A chrome extension",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/huangbuchao/sweet-potato.git",
+    "email": "huangbuchao@gmail.com"
+  },
+  "keywords": [
+    "extension",
+    "flux",
+    "redux",
+    "vuex",
+    "react",
+    "vue",
+    "cocos"
+  ],
+  "author": "huangbuchao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/huangbuchao/sweet-potato/issues"
+  },
+  "homepage": "https://github.com/huangbuchao/sweet-potato#readme"
+}
