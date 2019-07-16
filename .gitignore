@@ -1,3 +1,12 @@
+library/
+temp/
+local/
+build/
+game/sweet-potato-game/library/
+game/sweet-potato-game/temp/
+game/sweet-potato-game/node_modules/
+game/sweet-potato-game/local/
+
 # Logs
 logs
 *.log
@@ -30,6 +39,7 @@ bower_components
 .lock-wscript
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
+build
 build/Release
 
 # Dependency directories
@@ -59,3 +69,5 @@ typings/
 
 # next.js build output
 .next
+
+.DS_Store

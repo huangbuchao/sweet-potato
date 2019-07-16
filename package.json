@@ -4,7 +4,9 @@
   "description": "A chrome extension",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test"
+    "dev": "cross-env PORT=8024 npm run dev:shell",
+    "dev:shell": "cd shell/dev && webpack-dev-server --inline --hot",
+    "test2": "echo \"Error: no test2 specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -18,12 +20,37 @@
     "vuex",
     "react",
     "vue",
-    "cocos"
+    "cocos",
+    "sweetPotato"
   ],
   "author": "huangbuchao",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/huangbuchao/sweet-potato/issues"
   },
-  "homepage": "https://github.com/huangbuchao/sweet-potato#readme"
+  "homepage": "https://github.com/huangbuchao/sweet-potato#readme",
+  "dependencies": {
+    "d3": "^5.9.2",
+    "vue": "^2.6.10"
+  },
+  "devDependencies": {
+    "sweet-potato": "../packeage/sweet-potato",
+    "buble": "^0.19.0",
+    "buble-loader": "^0.5.1",
+    "cross-env": "^5.2.0",
+    "babel-eslint": "^7.2.3",
+    "eslint": "^4.19.1",
+    "prettier": "^1.17.1",
+    "eslint-config-prettier": "^2.10.0",
+    "eslint-plugin-prettier": "^2.7.0",
+    "webpack": "^4.19.0",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8",
+    "webpack-merge": "^4.1.2",
+    "raw-loader": "^0.5.1",
+    "friendly-errors-webpack-plugin": "^1.7.0"
+  },
+  "engines": {
+    "node": ">=8.10"
+  }
 }
