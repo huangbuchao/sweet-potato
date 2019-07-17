@@ -30,7 +30,7 @@ cc.Class({
             cc.fadeOut(4),
             cc.callFunc(() => {
                 this.imageComp.spriteFrame = this.images[this.index];
-                this.index === 4 ? this.index = 0 : this.index++;
+                this.index === 4 ? (this.index = 0) : this.index++;
             }),
             cc.fadeIn(4)
         ];

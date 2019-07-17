@@ -1,9 +1,9 @@
+import Hammer from '../lib/CocosHammer';
+
 cc.Class({
     extends: cc.Component,
 
-    properties: {
-
-    },
+    properties: {},
 
     onLoad() {
         this.index = this.node.getSiblingIndex();
@@ -12,10 +12,12 @@ cc.Class({
     },
 
     listenEvents() {
-        this.node.on('touchmove', (e) => {
-            let point = this.node.parent.convertToNodeSpaceAR(e.getLocation());
+        this.hammer = new Hammer(this.node);
+        this.hammer.on('panmove', ({ srcEvent }) => {
+            let point = this.node.parent.convertToNodeSpaceAR(
+                srcEvent.getLocation()
+            );
             this.actions.setPosition({ index: this.index, point: point });
-            //this.node.setPosition(point);
         });
     },
 

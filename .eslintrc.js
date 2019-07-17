@@ -15,6 +15,7 @@ module.exports = {
         }
     },
     "globals": {
+        "cc": true,
         "sweetPotato": true,
         "coconut": true,
         "bridge": true,

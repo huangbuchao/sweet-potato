@@ -1,13 +1,11 @@
 import EventTarget from '../lib/event';
 import actions from '../lib/actions';
-import { Store } from '../lib/store'
+import { Store } from '../lib/store';
 
 cc.Class({
     extends: cc.Component,
 
-    properties: {
-
-    },
+    properties: {},
 
     onLoad() {
         this.nodes = [];
@@ -21,15 +19,15 @@ cc.Class({
     },
 
     bindStateChange() {
-        this.event.on('change', (e) => {
-            this.scripts.forEach((ctx) => {
+        this.event.on('change', e => {
+            this.scripts.forEach(ctx => {
                 ctx.onStateChange(e.data);
             });
         });
     },
 
     initActions() {
-        this.scripts.forEach((ctx) => {
+        this.scripts.forEach(ctx => {
             ctx.actions = this.store.actions;
         });
     },
@@ -43,7 +41,7 @@ cc.Class({
         for (let index = 0; index < node.children.length; index++) {
             const element = node.children[index];
             this.nodes.push(element);
-            if(element.children.length !== 0) {
+            if (element.children.length !== 0) {
                 this.getNodes(element);
             }
         }
@@ -62,5 +60,5 @@ cc.Class({
         for (let index = 0; index < node[target].length; index++) {
             const element = node[target][index];
         }
-    },
+    }
 });
