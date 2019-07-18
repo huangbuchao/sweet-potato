@@ -1,3 +1,7 @@
+/**
+ * https://github.com/huangbuchao/CocosHammer.JS
+ */
+
 (function(exportName, undefined) {
   "use strict";
 

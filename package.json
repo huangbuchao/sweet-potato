@@ -34,7 +34,6 @@
     "vue": "^2.6.10"
   },
   "devDependencies": {
-    "sweet-potato": "../packeage/sweet-potato",
     "buble": "^0.19.0",
     "buble-loader": "^0.5.1",
     "cross-env": "^5.2.0",

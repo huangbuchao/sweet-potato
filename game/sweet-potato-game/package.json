@@ -1,15 +1,24 @@
 {
-  "name": "game",
+  "name": "sweet-potato-game",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "cd ../ && cd cocos-compiler && npm run dev",
+    "build": "cd ../ && cd cocos-compiler && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "huangbuchao",
   "license": "ISC",
   "dependencies": {
-    "redux": "^3.7.2",
-    "clone": "^2.1.1"
+    "babel-polyfill": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.1",
+    "babel-jest": "^22.4.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "clone": "^2.1.1",
+    "redux": "^3.7.2"
   }
 }

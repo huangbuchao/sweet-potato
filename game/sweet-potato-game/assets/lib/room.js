@@ -1,5 +1,5 @@
 import EventTarget from '../lib/event';
-import actions from '../lib/actions';
+import actions from '../lib/actions/positionAction';
 import { Store } from '../lib/store';
 
 cc.Class({
@@ -57,8 +57,8 @@ cc.Class({
     },
 
     walk(obj, func, target) {
-        for (let index = 0; index < node[target].length; index++) {
-            const element = node[target][index];
+        for (let index = 0; index < obj[target].length; index++) {
+            func(obj[target][index]);
         }
     }
 });

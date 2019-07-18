@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Target</title>
+</head>
+<body>
+    <script src="//static.wanduoduo.com/asset/script/cocos-creator-1.9.1.min.js"></script>
+    <script src="./main.js"></script>
+    <div id="GameDiv">
+        <canvas id="GameCanvas"></canvas>
+    </div>
+    <script>
+        (function(bootGame) {
+            Object.prototype.toString.call(bootGame) === "[object Function]" ? bootGame('sweet-potato') : console.error('boot is not expect!');
+        })(window.bootGame)
+    </script>
+</body>
+</html>

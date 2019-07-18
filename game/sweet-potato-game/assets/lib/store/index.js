@@ -11,7 +11,7 @@ export function Store(actions) {
         return next(action);
     };
 
-    const actionsWrapperMiddleware = store => next => action => {};
+    //const actionsWrapperMiddleware = store => next => action => {};
 
     const thunk = store => next => action =>
         typeof action === 'function'

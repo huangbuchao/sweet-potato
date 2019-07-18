@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { positionReducer } from './positonReducer';
 
-const reducers =  combineReducers({
+const reducers = combineReducers({
     positionReducer
 });
 
