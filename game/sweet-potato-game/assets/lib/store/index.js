@@ -1,5 +1,5 @@
 import { positionReducer } from '../reducers/positonReducer';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import EventTarget from '../event';
 import { inherit } from '../utils';
 
@@ -27,10 +27,11 @@ export function Store(actions) {
         return result;
     };
 
-    const store = (this.store = createStore(
-        combineReducers({ positionReducer }),
-        applyMiddleware(actionMiddleware, logger, thunk)
-    ));
+    const store = window.__REDUX_DEVTOOLS_EXTENSION__ ? (
+        createStore(combineReducers({ positionReducer }), compose(applyMiddleware(actionMiddleware, logger, thunk), window.__REDUX_DEVTOOLS_EXTENSION__()))
+    ) : (
+        createStore(combineReducers({ positionReducer }), applyMiddleware(actionMiddleware, logger, thunk))
+    )
 
     store.subscribe(() => {
         this.emit({ type: 'change', data: store.getState() });
