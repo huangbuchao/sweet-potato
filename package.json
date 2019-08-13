@@ -4,8 +4,8 @@
   "description": "A chrome extension",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env PORT=8024 npm run dev:shell",
-    "dev:shell": "cd shell/dev && webpack-dev-server --inline --hot",
+    "dev": "cross-env PORT=8024 npm run dev:shells",
+    "dev:shells": "cd shells/dev && webpack-dev-server --inline --hot",
     "test2": "echo \"Error: no test2 specified\" && exit 1"
   },
   "repository": {
