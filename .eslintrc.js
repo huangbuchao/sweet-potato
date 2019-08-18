@@ -5,7 +5,7 @@ module.exports = {
         "browser": true,
         "es6": true
     },
-    "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+    "extends": ["eslint:recommended"],
     "parser": "babel-eslint",
     "parserOptions": {
         "ecmaVersion": 9,
@@ -24,7 +24,6 @@ module.exports = {
         "HTMLDocument": true,
         "name": false
     },
-    "plugins": ["prettier"],
     "rules": {
         // enable additional rules
         "indent": ["error", 4],

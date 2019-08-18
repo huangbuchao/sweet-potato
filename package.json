@@ -31,24 +31,41 @@
   "homepage": "https://github.com/huangbuchao/sweet-potato#readme",
   "dependencies": {
     "d3": "^5.9.2",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-router": "^3.0.2",
+    "vuex": "^3.1.0"
   },
   "devDependencies": {
-    "buble": "^0.19.0",
-    "buble-loader": "^0.5.1",
-    "cross-env": "^5.2.0",
+    "@babel/core": "^7.1.6",
+    "@babel/plugin-transform-flow-strip-types": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/preset-flow": "^7.0.0",
+    "babel-loader": "^8.0.4",
     "babel-eslint": "^7.2.3",
+    "cross-env": "^5.2.0",
+    "cypress": "^3.1.0",
+    "flow-bin": "0.66.0",
+    "autoprefixer": "^9.1.5",
     "eslint": "^4.19.1",
-    "prettier": "^1.17.1",
-    "eslint-config-prettier": "^2.10.0",
-    "eslint-plugin-prettier": "^2.7.0",
     "webpack": "^4.19.0",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.8",
     "webpack-merge": "^4.1.2",
     "raw-loader": "^0.5.1",
-    "friendly-errors-webpack-plugin": "^1.7.0"
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "url-loader": "^1.1.1",
+    "vue-loader": "^15.4.2",
+    "css-loader": "^1.0.0",
+    "postcss-loader": "^3.0.0",
+    "file-loader": "^2.0.0",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "@types/node": "^10.12.18",
+    "@types/webpack": "^4.4.22",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3"
   },
+  "types": "types/potato.d.ts",
   "engines": {
     "node": ">=8.10"
   }

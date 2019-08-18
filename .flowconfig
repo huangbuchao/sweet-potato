@@ -1,0 +1,10 @@
+[ignore]
+.*node_modules/babel.*
+
+[libs]
+flow
+
+[options]
+
+[version]
+0.66.0
