@@ -2,6 +2,6 @@
  * @flow
  */
 
-export default function initDevtools(shell) {
+export function initDevtools(shell) {
 
 }
