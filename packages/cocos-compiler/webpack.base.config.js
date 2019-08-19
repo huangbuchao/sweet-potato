@@ -8,7 +8,7 @@ const PeppaPlugin = require('./plugin/PeppaPlugin');
 
 const md5 = crypto.createHash('md5');
 const cwd =
-    '/Users/huangbuchao/webPrejects/sweet-potato/game/sweet-potato-game';
+    '/Users/huangbuchao/webPrejects/sweet-potato/packages/sweet-potato-game';
 const { name } = require(`${cwd}/package.json`);
 const webpackConfigPath = `${cwd}/webpack.config.js`;
 md5.update(name);

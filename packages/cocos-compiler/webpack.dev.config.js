@@ -5,7 +5,7 @@ const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 const baseConfig = require('./webpack.base.config');
 const cwd =
-    '/Users/huangbuchao/webPrejects/sweet-potato/game/sweet-potato-game';
+    '/Users/huangbuchao/webPrejects/sweet-potato/packages/sweet-potato-game';
 const output = `${cwd}/dist`;
 
 module.exports = merge.smart(baseConfig, {

@@ -6,9 +6,9 @@ const CheckSumPlugin = require('./plugin/CheckSumPlugin');
 const baseConfig = require('./webpack.base.config');
 
 const cwd =
-    '/Users/huangbuchao/webPrejects/sweet-potato/game/sweet-potato-game';
+    '/Users/huangbuchao/webPrejects/sweet-potato/packages/sweet-potato-game';
 const { version } = require(`${cwd}/package.json`);
-const output = '/Users/huangbuchao/webPrejects/sweet-potato/shells/dev/target';;
+const output = '/Users/huangbuchao/webPrejects/sweet-potato/shells/dev/target';
 
 module.exports = merge.smart(baseConfig, {
     mode: 'development',
