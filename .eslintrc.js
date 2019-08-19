@@ -28,8 +28,6 @@ module.exports = {
         // enable additional rules
         "indent": ["error", 4],
         "linebreak-style": ["error", "unix"],
-        "prettier/prettier": "error",
-
         // disable rules from base configurations
         "no-console": "off",
     }
