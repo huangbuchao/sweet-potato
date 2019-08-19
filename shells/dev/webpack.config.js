@@ -1,17 +1,75 @@
 const path = require('path');
-const webpack = require('webpack');
+const { DefinePlugin } = require('webpack');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = {
-    entry: './src/index.js',
-    output: {
-        filename: 'bundle.js',
-        path: path.join(__dirname, '/')
+    entry: {
+        devtools: './src/devtools.js',
+        backend: './src/backend.js',
+        hook: './src/hook.js'
     },
+    output: {
+        path: path.join(__dirname, '/build'),
+        publicPath: '/build/',
+        filename: '[name].js'
+    },
+    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+    resolve: {
+        alias: {
+            src: path.resolve(__dirname, '../src')
+        },
+        symlinks: false
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: /node_modules|vue\/dist|vuex\/dist/
+            },
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader'
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'css-loader',
+                    'postcss-loader'
+                ]
+            },
+            {
+                test: /\.sytl(us)?$/,
+                use: [
+                    'css-loader',
+                    'postcss-loader',
+                    'stylus-loader'
+                ]
+            },
+            {
+                test: /\.(png|woff2)$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 0
+                }
+            }
+        ]
+    },
+    devtool: "#cheap-module-source-map",
     devServer: {
         quiet: true,
         host: '0.0.0.0',
-        port: 8024
+        port: process.env.PORT
     },
-    plugins: [new FriendlyErrorsPlugin()]
+    performance: {
+        hints: false
+    },
+    stats: 'errors-only',
+    plugins: [
+        new FriendlyErrorsPlugin(),
+        new DefinePlugin({
+            __DEV__: '__DEV__',
+            'process.env.POTATO': 'handon'
+        }),
+    ]
 };
