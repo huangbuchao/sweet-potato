@@ -1,9 +1,15 @@
+/**
+ * https://github.com/huangbuchao/Custom-event-model
+ */
+
 function EventTarget() {
-  this.handlers = {};
+  //this.handlers = {};
 }
 
 EventTarget.prototype = {
   constructor: EventTarget,
+
+  handlers: {},
 
   on: function(type, handler, context) {
     if (typeof this.handlers[type] === "undefined") {

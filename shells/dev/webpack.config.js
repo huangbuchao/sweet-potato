@@ -1,13 +1,13 @@
 const path = require("path");
 const { DefinePlugin } = require("webpack");
-const { VueLoaderPlugin } = require('vue-loader');
+const { VueLoaderPlugin } = require("vue-loader");
 const FriendlyErrorsPlugin = require("friendly-errors-webpack-plugin");
 
 module.exports = {
   entry: {
     devtools: "./src/devtools.js",
-    backend: './src/backend.js',
-    hook: './src/hook.js'
+    backend: "./src/backend.js",
+    hook: "./src/hook.js"
   },
   output: {
     path: path.join(__dirname, "/build"),
@@ -25,7 +25,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        loader: "babel-loader",
         exclude: /node_modules|vue\/dist|vuex\/dist/
       },
       {
@@ -34,11 +34,28 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ["css-loader", "postcss-loader"]
+        use: [
+          "vue-style-loader",
+          "css-loader",
+          "postcss-loader"
+        ]
       },
       {
-        test: /\.sytl(us)?$/,
-        use: ["css-loader", "postcss-loader", "stylus-loader"]
+        test: /\.styl(us)?$/,
+        use: [
+          "vue-style-loader",
+          "css-loader",
+          "postcss-loader",
+          "stylus-loader",
+          {
+            loader: 'style-resources-loader',
+            options: {
+              patterns: [
+                path.resolve(__dirname, '../src/devtools/style/imports.styl')
+              ]
+            }
+          }
+        ]
       },
       {
         test: /\.(png|woff2)$/,
