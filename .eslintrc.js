@@ -26,7 +26,7 @@ module.exports = {
     },
     "rules": {
         // enable additional rules
-        "indent": ["error", 4],
+        "indent": [2, 2, {SwitchCase: 1}],
         "linebreak-style": ["error", "unix"],
         // disable rules from base configurations
         "no-console": "off",

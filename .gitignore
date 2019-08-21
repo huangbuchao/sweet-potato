@@ -2,11 +2,11 @@ library/
 temp/
 local/
 build/
-game/sweet-potato-game/library/
-game/sweet-potato-game/temp/
-game/sweet-potato-game/node_modules/
-game/sweet-potato-game/local/
-game/cocos-compiler/node_modules/
+packages/sweet-potato-game/library/
+packages/sweet-potato-game/temp/
+packages/sweet-potato-game/node_modules/
+packages/sweet-potato-game/local/
+packages/cocos-compiler/node_modules/
 
 # Logs
 logs

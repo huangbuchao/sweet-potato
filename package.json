@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env PORT=8024 npm run dev:shells",
-    "dev:shells": "cd shells/dev && webpack-dev-server --inline --hot",
+    "dev:shells": "cd shells/dev && webpack-dev-server --inline --no-info",
     "test2": "echo \"Error: no test2 specified\" && exit 1",
     "typecheck": "flow check"
   },
@@ -61,6 +61,7 @@
     "stylus-loader": "^3.0.1",
     "url-loader": "^1.1.1",
     "vue-loader": "^15.4.2",
+    "vue-template-compiler": "^2.6.10",
     "css-loader": "^1.0.0",
     "postcss-loader": "^3.0.0",
     "file-loader": "^2.0.0",

@@ -1,75 +1,73 @@
-const path = require('path');
-const { DefinePlugin } = require('webpack');
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
+const path = require("path");
+const { DefinePlugin } = require("webpack");
+const { VueLoaderPlugin } = require('vue-loader');
+const FriendlyErrorsPlugin = require("friendly-errors-webpack-plugin");
 
 module.exports = {
-    entry: {
-        devtools: './src/devtools.js',
-        backend: './src/backend.js',
-        hook: './src/hook.js'
+  entry: {
+    devtools: "./src/devtools.js",
+    backend: './src/backend.js',
+    hook: './src/hook.js'
+  },
+  output: {
+    path: path.join(__dirname, "/build"),
+    publicPath: "/build/",
+    filename: "[name].js"
+  },
+  mode: process.env.NODE_ENV === "production" ? "production" : "development",
+  resolve: {
+    alias: {
+      src: path.resolve(__dirname, "../../src")
     },
-    output: {
-        path: path.join(__dirname, '/build'),
-        publicPath: '/build/',
-        filename: '[name].js'
-    },
-    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
-    resolve: {
-        alias: {
-            src: path.resolve(__dirname, '../src')
-        },
-        symlinks: false
-    },
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                exclude: /node_modules|vue\/dist|vuex\/dist/
-            },
-            {
-                test: /\.vue$/,
-                loader: 'vue-loader'
-            },
-            {
-                test: /\.css$/,
-                use: [
-                    'css-loader',
-                    'postcss-loader'
-                ]
-            },
-            {
-                test: /\.sytl(us)?$/,
-                use: [
-                    'css-loader',
-                    'postcss-loader',
-                    'stylus-loader'
-                ]
-            },
-            {
-                test: /\.(png|woff2)$/,
-                loader: 'url-loader',
-                options: {
-                    limit: 0
-                }
-            }
-        ]
-    },
-    devtool: "#cheap-module-source-map",
-    devServer: {
-        quiet: true,
-        host: '0.0.0.0',
-        port: process.env.PORT
-    },
-    performance: {
-        hints: false
-    },
-    stats: 'errors-only',
-    plugins: [
-        new FriendlyErrorsPlugin(),
-        new DefinePlugin({
-            __DEV__: '__DEV__',
-            'process.env.POTATO': 'handon'
-        }),
+    symlinks: false
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules|vue\/dist|vuex\/dist/
+      },
+      {
+        test: /\.vue$/,
+        loader: "vue-loader"
+      },
+      {
+        test: /\.css$/,
+        use: ["css-loader", "postcss-loader"]
+      },
+      {
+        test: /\.sytl(us)?$/,
+        use: ["css-loader", "postcss-loader", "stylus-loader"]
+      },
+      {
+        test: /\.(png|woff2)$/,
+        loader: "url-loader",
+        options: {
+          limit: 0
+        }
+      }
     ]
+  },
+  devtool: "#cheap-module-source-map",
+  devServer: {
+    hot: false,
+    quiet: true,
+    host: "0.0.0.0",
+    port: process.env.PORT
+  },
+  performance: {
+    hints: false
+  },
+  stats: {
+    colors: true
+  },
+  plugins: [
+    new VueLoaderPlugin(),
+    new FriendlyErrorsPlugin(),
+    new DefinePlugin({
+      __DEV__: "__DEV__",
+      "process.env.POTATO": "handon"
+    })
+  ]
 };
