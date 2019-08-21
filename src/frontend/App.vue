@@ -3,13 +3,13 @@
 </template>
 
 <script>
-  //console.log('app.vue');
-  export default {
-  name: 'App'
-}
+export default {
+  name: "App"
+};
 </script>
 
 <style lang='stylus' scoped>
-#button
-  background-color $darkerGreen = #3BA776
+#button {
+  background-color: $green = #42B983;
+}
 </style>
