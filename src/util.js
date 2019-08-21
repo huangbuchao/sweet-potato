@@ -1,3 +1,10 @@
+/**
+ * @flow
+ */
+
 export function getType(target) {
-    return Object.prototype.toString.call(target).replace(/^\[object (.+)\]$/, '$1').toLowerCase();
+  return Object.prototype.toString
+    .call(target)
+    .replace(/^\[object (.+)\]$/, "$1")
+    .toLowerCase();
 }
