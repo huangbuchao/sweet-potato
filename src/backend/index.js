@@ -1,4 +1,7 @@
+/**
+ * @flow
+ */
 
-export function initBackenc() {
+export function initBackend() {
 
 }
