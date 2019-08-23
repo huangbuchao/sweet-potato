@@ -7,7 +7,8 @@
     "dev": "cross-env PORT=8024 npm run dev:shells",
     "dev:shells": "cd shells/dev && webpack-dev-server --inline --no-info",
     "test2": "echo \"Error: no test2 specified\" && exit 1",
-    "typecheck": "flow check"
+    "typecheck": "flow check",
+    "lint": "eslint ."
   },
   "private": true,
   "workspaces": [
