@@ -60,7 +60,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|woff2)$/,
+        test: /\.(png|woff2|ttf)$/,
         loader: "url-loader",
         options: {
           limit: 0

@@ -15,9 +15,34 @@
           >
             Components
           </VueGroupButton>
-          <VueGroupButton>item01</VueGroupButton>
-          <VueGroupButton>item02</VueGroupButton>
-          <VueGroupButton>item03</VueGroupButton>
+          <VueGroupButton
+            value="components"
+            icon-left="device_hub"
+            class="components-tab flat"
+          >
+            Flux
+          </VueGroupButton>
+          <VueGroupButton
+            value="components"
+            icon-left="device_hub"
+            class="components-tab flat"
+          >
+            Events
+          </VueGroupButton>
+          <VueGroupButton
+            value="components"
+            icon-left="device_hub"
+            class="components-tab flat"
+          >
+            Preformance
+          </VueGroupButton>
+          <VueGroupButton
+            value="components"
+            icon-left="device_hub"
+            class="components-tab flat"
+          >
+            Setting
+          </VueGroupButton>
         </VueGroup>
       </div>
     </div>
@@ -38,8 +63,12 @@ export default {
 };
 </script>
 
+<style lang="stylus" src="./style/global.styl">
+</style>
+
 <style lang='stylus' scoped>
-#button {
-  background-color: $green = #42B983;
-}
+.app
+  width 100%
+  height 100%
+  user-select none
 </style>
