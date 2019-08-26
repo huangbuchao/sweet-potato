@@ -17,7 +17,9 @@ module.exports = {
   mode: process.env.NODE_ENV === "production" ? "production" : "development",
   resolve: {
     alias: {
-      src: path.resolve(__dirname, "../../src")
+      frontend: path.resolve(__dirname, "../../frontend"),
+      backend: path.resolve(__dirname, "../../backend"),
+      shared: path.resolve(__dirname, "../../shared"),
     },
     symlinks: false
   },

@@ -2,8 +2,9 @@
  * @flow
  */
 import Vue from "vue";
-import { init as initStorage } from "src/storage";
+import { init as initStorage } from "shared/storage";
 import App from "./App.vue";
+import './plugins';
 
 Vue.options.renderError = (h, e) => {
   return h(

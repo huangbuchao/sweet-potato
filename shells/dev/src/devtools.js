@@ -1,8 +1,8 @@
 /**
  * @flow
  */
-import { initDevtools } from "src/frontend";
-import Bridge from "src/bridge";
+import { initDevtools } from "frontend";
+import Bridge from "shared/bridge";
 
 const target = document.getElementById("target");
 const targetWindow = target.contentWindow;
