@@ -71,4 +71,13 @@ export default {
   width 100%
   height 100%
   user-select none
+  background-color $background-color
+  display flex
+  flex-direction column
+  position relative
+
+.log
+  width 30px
+  height 30px
+  margin 0 15px
 </style>
