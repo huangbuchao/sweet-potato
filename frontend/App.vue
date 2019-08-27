@@ -4,41 +4,48 @@
       <option v-for="(value, key) of specialTokens" :key="key" :value="key"></option>
     </datalist>
     <div class="header">
-      <img src="./assets/logo.png" alt="vue-log" class="log">
+      <img src="./assets/sp200.png" alt="vue-log" class="log">
       <span class="message-container"></span>
       <div class="actions">
         <VueGroup>
           <VueGroupButton
             value="components"
-            icon-left="device_hub"
+            icon-left="subject"
             class="components-tab flat"
           >
             Components
           </VueGroupButton>
           <VueGroupButton
             value="components"
-            icon-left="device_hub"
+            icon-left="store"
             class="components-tab flat"
           >
-            Flux
+            Store
           </VueGroupButton>
           <VueGroupButton
             value="components"
-            icon-left="device_hub"
+            icon-left="send"
             class="components-tab flat"
           >
             Events
           </VueGroupButton>
           <VueGroupButton
             value="components"
-            icon-left="device_hub"
+            icon-left="toys"
             class="components-tab flat"
           >
-            Preformance
+            Router
           </VueGroupButton>
           <VueGroupButton
             value="components"
-            icon-left="device_hub"
+            icon-left="equalizer"
+            class="components-tab flat"
+          >
+            Stats
+          </VueGroupButton>
+          <VueGroupButton
+            value="components"
+            icon-left="settings_applications"
             class="components-tab flat"
           >
             Setting
