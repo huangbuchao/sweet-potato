@@ -3,10 +3,10 @@
     <datalist>
       <option v-for="(value, key) of specialTokens" :key="key" :value="key"></option>
     </datalist>
-    <div class="head">
+    <div class="header">
       <img src="./assets/logo.png" alt="vue-log" class="log">
-      <span>devtools</span>
-      <div>
+      <span class="message-container"></span>
+      <div class="actions">
         <VueGroup>
           <VueGroupButton
             value="components"
@@ -76,8 +76,55 @@ export default {
   flex-direction column
   position relative
 
+.header
+  display flex
+  align-items center
+  box-shadow 0 0 16px rgba(0, 0, 0, 0.3)
+  font-size 14px
+  position relative
+
+.message-container
+  height 1em
+  cursor default
+  display none
+  @media (min-width: $wide - 300px)
+    display block
+
 .log
   width 30px
   height 30px
   margin 0 15px
+
+.actions
+  display flex
+  flex auto 1 1
+  justify-content flex-end
+
+
+.vue-ui-button
+  height 38px
+  @media (max-width: $wide)
+    width 38px
+    /deep/
+      .button-icon.left
+        margin-right 0 !important
+      .default-slot
+        display none
+  @media (min-height: $tall)
+    height 48px
+    @media (max-width: $wide)
+      width @height
+
+.vue-ui-group /deep/ > .indicator
+  padding-bottom 0 !important
+
+.container
+  height: calc(100% - 60px)
+  position relative
+  overflow hidden
+  flex 1
+
+.hide-below-wide
+  @media (max-width: $wide)
+    display: none
 </style>
