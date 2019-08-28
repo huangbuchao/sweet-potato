@@ -43,6 +43,42 @@
           >
             Stats
           </VueGroupButton>
+          <GroupDropdown
+            v-tooltip="$t('App.routing.tooltip')"
+            :is-open="isRouterGroupOpen"
+            :options="routingTabs"
+            :value="routeModel"
+            @update="isRouterGroupOpen = $event"
+            @select="routeModel = $event"
+          >
+            <template slot="header">
+              <VueIcon
+                icon="directions"
+                class="left-icon"
+              />
+              <span class="hide-below-wide">
+                Routing
+              </span>
+              <VueIcon
+                icon="keyboard_arrow_down"
+                class="right-icon"
+              />
+            </template>
+            <template
+              slot="option"
+              slot-scope="{ option }"
+            >
+              <VueGroupButton
+                :value="option.name"
+                :icon-left="option.icon"
+                style="width: 100%;"
+                class="router-tab flat big-tag"
+                @selected="isRouterGroupOpen = false"
+              >
+                {{ option.label }}
+              </VueGroupButton>
+            </template>
+          </GroupDropdown>
           <VueGroupButton
             value="components"
             icon-left="settings_applications"
@@ -58,9 +94,25 @@
 
 <script>
 import { SPECIAL_TOKENS } from "shared/util";
+import GroupDropdown from "./components/GroupDropdown.vue";
 
 export default {
   name: "App",
+
+  components: {
+    GroupDropdown
+  },
+
+  data () {
+    return {
+      isRouterGroupOpen: false,
+      routingTabs: [
+        { name: 'router', label: 'History', icon: 'directions' },
+        { name: 'routes', label: 'Routes', icon: 'book' }
+      ],
+      settingsVersion: ''
+    }
+  },
 
   computed: {
     specialTokens() {

@@ -10,6 +10,7 @@
     "typecheck": "flow check",
     "lint": "eslint ."
   },
+  "types": "types/potato.d.ts",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -76,7 +77,6 @@
     "typescript": "^3.5.3",
     "lerna": "^2.8.0"
   },
-  "types": "types/potato.d.ts",
   "engines": {
     "node": ">=8.10"
   }

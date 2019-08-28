@@ -53,7 +53,7 @@ module.exports = {
             loader: 'style-resources-loader',
             options: {
               patterns: [
-                path.resolve(__dirname, '../src/devtools/style/imports.styl')
+                path.resolve(__dirname, '../../frontend/style/imports.styl')
               ]
             }
           }
