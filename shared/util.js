@@ -115,6 +115,13 @@ export function copyToClipboard(state) {
 }
 
 
+
+export function get() {
+
+}
+
+
+
 //cust
 export function thunkify(fnc) {
   const args = Array.prototype.slice.call(arguments, 1);
