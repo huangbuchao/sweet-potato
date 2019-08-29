@@ -116,8 +116,15 @@ export function copyToClipboard(state) {
 
 
 
-export function get() {
-
+export function get (object, path) {
+  const sections = Array.isArray(path) ? path : path.split('.')
+  for (let i = 0; i < sections.length; i++) {
+    object = object[sections[i]]
+    if (!object) {
+      return undefined
+    }
+  }
+  return object
 }
 
 
