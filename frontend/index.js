@@ -5,6 +5,11 @@ import Vue from "vue";
 import { init as initStorage } from "shared/storage";
 import App from "./App.vue";
 import './plugins';
+import * as filters from './filters';
+
+for (const key in filters) {
+  Vue.filter(key, filters[key]);
+}
 
 Vue.options.renderError = (h, e) => {
   return h(

@@ -3,9 +3,9 @@
  * @flow
  */
 
-import { get } from "shared/utils";
+import { get } from "shared/util";
 
-const reg = /\{\{\s*([\w_-.]+)\s*\}\}/g;
+const reg = /\{\{\s*([\w_.-]+)\s*\}\}/g
 
 let strings;
 let defaultValues;
