@@ -1,0 +1,36 @@
+/**
+ * @flow
+ */
+
+export const isBrowser = typeof navigator !== 'undefined';
+export const target = isBrowser ? window : typeof global !== 'undefined' ? global : {};
+export const isChrome = typeof chrome !== 'undefined' && !!chrome.devtools;
+export const isFireFox = isBrowser && navigator.userAgent.indexOf('FireFox') > -1;
+export const isWindows = isBrowser && navigator.platform.indexOf('Win') === 0;
+export const isMac = isBrowser && navigator.platform === 'MacIntel';
+export const isLinux = isBrowser && navigator.platform.indexOf('Linux') === 0;
+export const keys = {
+  ctrl: isMac ? '&#8984' : 'Ctrl',
+  shift: 'Shift',
+  alt: isMac ? '&#8997' : 'Alt',
+  del: 'Del',
+  enter: 'Enter',
+  esc: 'Esc'
+};
+
+export function intEnv(Vue) {
+  if(Vue.prototype.hasOwnProperty('$isChrome')) return;
+
+  Object.defineProperties(Vue.prototype, {
+    '$isChrome': { get: () => isChrome },
+    '$isFireFox': { get: () => isFireFox },
+    '$isWindows': { get: () => isWindows },
+    '$isMac': { get: () => isMac },
+    '$isLinux': { get: () => isLinux },
+    '$keys': { get: () => keys }
+  });
+
+  if(isWindows) document.body.classList.add('platform-windows');
+  if(isMac) document.body.classList.add('platform-mac');
+  if(isLinux) document.body.classList.add('platform-linux');
+}
