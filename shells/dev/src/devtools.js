@@ -2,11 +2,11 @@
  * @flow
  */
 import { initDevtools } from "frontend";
-import Bridge from "shared/bridge";
+import Bridge from "agent/bridge";
 
 const target = document.getElementById("target");
 const targetWindow = target.contentWindow;
-console.log('devtool hot');
+
 target.src = "./target/index.html";
 target.onload = () => {
   initDevtools({

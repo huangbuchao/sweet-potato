@@ -20,6 +20,7 @@ module.exports = {
       frontend: path.resolve(__dirname, "../../frontend"),
       backend: path.resolve(__dirname, "../../backend"),
       shared: path.resolve(__dirname, "../../shared"),
+      agent: path.resolve(__dirname, "../../agent"),
       vendor: path.resolve(__dirname, "../../vendor")
     },
     symlinks: false
