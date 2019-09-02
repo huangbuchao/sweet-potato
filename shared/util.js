@@ -4,7 +4,6 @@
 import path from 'path';
 import * as CircularJSON from 'vendor/transfer';
 
-
 function cached(func) {
   const cache = Object.create(null);
   return function cachedFunc(str) {

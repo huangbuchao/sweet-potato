@@ -1,12 +1,14 @@
 /**
  * @flow
  */
+
 import Vue from "vue";
 import { init as initStorage } from "shared/storage";
 import App from "./App.vue";
 import './plugins';
 import * as filters from './filters';
 import { createStore } from './store';
+import router from './router';
 
 for (const key in filters) {
   Vue.filter(key, filters[key]);
@@ -54,7 +56,8 @@ function initApp(shell) {
 
     app = new Vue({
       extends: App,
-      store
+      store,
+      router
     }).$mount("#app");
   });
 }

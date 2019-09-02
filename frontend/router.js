@@ -9,7 +9,7 @@ import Components from "./views/components/Components.vue";
 import Events from "./views/events/Events.vue";
 import Stats from "./views/stats/Stats.vue";
 import Store from "./views/store/Store.vue";
-import Setting from "./views/settings/Setting.vue";
+import Setting from "./views/setting/Setting.vue";
 import Router from "./views/router/Router.vue";
 import Routing from "./views/routing/Routing.vue";
 
