@@ -6,6 +6,7 @@ import { init as initStorage } from "shared/storage";
 import App from "./App.vue";
 import './plugins';
 import * as filters from './filters';
+import { createStore } from './store';
 
 for (const key in filters) {
   Vue.filter(key, filters[key]);
@@ -45,12 +46,15 @@ function initApp(shell) {
   shell.connect(bridge => {
     window.bridge = bridge;
 
+    const store = createStore();
+
     bridge.on("test", () => {
       console.log("devtool test trigged!");
     });
 
     app = new Vue({
-      extends: App
+      extends: App,
+      store
     }).$mount("#app");
   });
 }
