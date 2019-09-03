@@ -7,8 +7,13 @@
       <img src="./assets/sp200.png" alt="vue-log" class="log">
       <span class="message-container"></span>
       <div class="actions">
-        <VueGroup>
+        <VueGroup
+          v-model="routeModel"
+          class="primary inline"
+          indicator
+        >
           <VueGroupButton
+            v-tooltip="$t('App.components.tooltip')"
             value="components"
             icon-left="subject"
             class="components-tab flat"
@@ -16,34 +21,34 @@
             Components
           </VueGroupButton>
           <VueGroupButton
-            value="components"
+            value="store"
             icon-left="store"
             class="components-tab flat"
           >
             Store
           </VueGroupButton>
           <VueGroupButton
-            value="components"
+            value="events"
             icon-left="send"
             class="components-tab flat"
           >
             Events
           </VueGroupButton>
           <VueGroupButton
-            value="components"
+            value="router"
             icon-left="toys"
             class="components-tab flat"
           >
             Router
           </VueGroupButton>
           <VueGroupButton
-            value="components"
+            value="stats"
             icon-left="equalizer"
             class="components-tab flat"
           >
             Stats
           </VueGroupButton>
-          <GroupDropdown
+          <!-- <GroupDropdown
             v-tooltip="$t('App.routing.tooltip')"
             :is-open="isRouterGroupOpen"
             :options="routingTabs"
@@ -78,17 +83,24 @@
                 {{ option.label }}
               </VueGroupButton>
             </template>
-          </GroupDropdown>
+          </GroupDropdown> -->
           <VueGroupButton
-            value="components"
+            v-tooltip="$t('App.settings.tooltip')"
+            :class="{
+              'icon-button': !$responsive.wide
+            }"
+            value="setting"
             icon-left="settings_applications"
-            class="components-tab flat"
+            class="settings-tab flat"
+            @focus.native="isRouterGroupOpen = false"
           >
-            Setting
+            Settings
           </VueGroupButton>
         </VueGroup>
       </div>
     </div>
+
+     <router-view class="container" />
   </div>
 </template>
 
@@ -117,6 +129,18 @@ export default {
   computed: {
     specialTokens() {
       return SPECIAL_TOKENS;
+    },
+
+    routeModel: {
+      get() {
+        return this.$route.matched[0].name;
+      },
+      set(value) {
+        this.$router.push({ name: value });
+        this.$nextTick(() => {
+          console.log(`next tick: ${value} rendered`);
+        });
+      }
     }
   }
 };

@@ -1,3 +1,8 @@
 <template>
-    <button>Store</button>
+    <button class="test">Store</button>
 </template>
+
+<style lang="stylus" scoped>
+  .test
+    font-size 50px
+</style>
