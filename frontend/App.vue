@@ -27,7 +27,7 @@
           >
             Store
           </VueGroupButton>
-          <VueGroupButton
+          <!-- <VueGroupButton
             value="events"
             icon-left="send"
             class="components-tab flat"
@@ -40,13 +40,13 @@
             class="components-tab flat"
           >
             Router
-          </VueGroupButton>
+          </VueGroupButton> -->
           <VueGroupButton
             value="stats"
             icon-left="equalizer"
             class="components-tab flat"
           >
-            Stats
+            Profiler
           </VueGroupButton>
           <!-- <GroupDropdown
             v-tooltip="$t('App.routing.tooltip')"
