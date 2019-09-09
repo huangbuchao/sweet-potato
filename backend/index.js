@@ -2,6 +2,6 @@
  * @flow
  */
 
-export function initBackend() {
+export function initBackend(bridge) {
 
 }

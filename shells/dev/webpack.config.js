@@ -7,7 +7,8 @@ module.exports = {
   entry: {
     devtools: "./src/devtools.js",
     backend: "./src/backend.js",
-    hook: "./src/hook.js"
+    hook: "./src/hook.js",
+    launch: "../../backend/mock-launcher.js"
   },
   output: {
     path: path.join(__dirname, "/build"),

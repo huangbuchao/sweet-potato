@@ -11,7 +11,7 @@ export function installHook(target) {
   if (target.hasOwnProperty("__POTATO_DEVTOOLS_GLOBAL_HOOK__")) return;
 
   const hook = {
-    Vue: null,
+    CC: null,
 
     _buffer: [],
 
@@ -68,7 +68,7 @@ export function installHook(target) {
 
     emit(event) {
       const $event = '$' + event;
-      let cbs = this.listeners[$event];
+      let cbs = listeners[$event];
       if(cbs) {
         const eventArgs = [].slice.call(arguments, 1)
         cbs = cbs.slice()
@@ -82,12 +82,13 @@ export function installHook(target) {
     }
   };
 
-  hook.once('init', Vue => {
-    hook.Vue = Vue;
-    Vue.prototype.$inspect = function() {
-      const fn = target.__POTATO_DEVTOOLS_INSPECT__;
-      fn && fn(this);
-    }
+  hook.once('init', CC => {
+    hook.CC = CC;
+    console.log(CC);
+    // CC.prototype.$inspect = function() {
+    //   const fn = target.__POTATO_DEVTOOLS_INSPECT__;
+    //   fn && fn(this);
+    // }
   });
 
   hook.once();
