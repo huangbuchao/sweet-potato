@@ -1,16 +1,16 @@
 /**
  * @flow
  */
-import { isBrowser } from "shared/env";
+import { target, isBrowser } from "shared/env";
 
-const inBroswer = isBrowser && window.__POTATO_DEVTOOLS_GLOBAL_HOOK__;
+const inBroswer = isBrowser && target.__POTATO_DEVTOOLS_GLOBAL_HOOK__;
 const devtools =
   process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test";
-const inCC = !!window.cc;
+const inCC = !!target.cc;
 
 inBroswer && devtools && inCC
   ? setTimeout(() => {
-    window.__POTATO_DEVTOOLS_GLOBAL_HOOK__.emit("init", window.cc);
+    target.__POTATO_DEVTOOLS_GLOBAL_HOOK__.emit("init", target.cc);
   })
   : console.log(
     `%c devtool launch failed, expect in broswer && development && CC environment`,
