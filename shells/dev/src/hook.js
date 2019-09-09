@@ -1,1 +1,3 @@
-console.log('hook')
+import { installHook } from "agent/hook";
+
+installHook(window);
