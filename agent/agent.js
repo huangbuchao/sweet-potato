@@ -2,6 +2,7 @@
  * @flow
  */
 export default function Agent() {
+  this.minor = false;
   this.compiler = {};
   this.translater = {
     format: '',
