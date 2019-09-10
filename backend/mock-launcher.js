@@ -13,6 +13,6 @@ inBroswer && devtools && inCC
     target.__POTATO_DEVTOOLS_GLOBAL_HOOK__.emit("init", target.cc);
   })
   : console.log(
-    `%c devtool launch failed, expect in broswer && development && CC environment`,
+    `%c devtool launch failed, expect in broswer && development mode && cocos environment`,
     "background: #e0d3d3 ; padding: 2px; border-radius: 3px 3px 3px 3px;  color: red"
   );

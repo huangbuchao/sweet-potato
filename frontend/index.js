@@ -50,8 +50,8 @@ function initApp(shell) {
 
     const store = createStore();
 
-    bridge.on("test", () => {
-      console.log("devtool test trigged!");
+    bridge.on("initCC", e => {
+      console.log("devtool test trigged!", e);
     });
 
     app = new Vue({

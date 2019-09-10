@@ -20,7 +20,7 @@ target.onload = () => {
               );
             },
             send(data) {
-              console.log("devtool->target", data);
+              console.log("devtool->backend", data);
               targetWindow.postMessage(data, "*");
             }
           })
