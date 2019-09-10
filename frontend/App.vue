@@ -5,7 +5,16 @@
     </datalist>
     <div class="header">
       <img src="./assets/sp200.png" alt="vue-log" class="log">
-      <span class="message-container"></span>
+      <span class="message-container">
+        <transition name="slide-up">
+          <span
+            :key="message"
+            class="message"
+          >
+            <span class="text">{{ message }}</span>
+          </span>
+        </transition>
+      </span>
       <div class="actions">
         <VueGroup
           v-model="routeModel"
@@ -33,14 +42,14 @@
             class="components-tab flat"
           >
             Events
-          </VueGroupButton>
+          </VueGroupButton> -->
           <VueGroupButton
             value="router"
             icon-left="toys"
             class="components-tab flat"
           >
-            Router
-          </VueGroupButton> -->
+            Travel
+          </VueGroupButton>
           <VueGroupButton
             value="stats"
             icon-left="equalizer"
@@ -107,6 +116,7 @@
 <script>
 import { SPECIAL_TOKENS } from "shared/util";
 import GroupDropdown from "./components/GroupDropdown.vue";
+import { mapState } from 'vuex';
 
 export default {
   name: "App",
@@ -127,6 +137,10 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      message: state => state.message
+    }),
+
     specialTokens() {
       return SPECIAL_TOKENS;
     },
@@ -172,6 +186,13 @@ export default {
   display none
   @media (min-width: $wide - 300px)
     display block
+
+.message
+  color $active-color
+  transition all 1s ease
+  position absolute
+  display flex
+  align-items center
 
 .log
   width 30px

@@ -50,8 +50,10 @@ function initApp(shell) {
 
     const store = createStore();
 
-    bridge.on("initCC", e => {
-      console.log("devtool test trigged!", e);
+    bridge.send('log-detected-cocos');
+
+    bridge.on("ready", version => {
+      store.commit('SHOW_MESSAGE', 'Ready. Detected Cocos ' + version + '.');
     });
 
     app = new Vue({
