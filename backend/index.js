@@ -10,6 +10,21 @@ let bridge;
 export function initBackend(_bridge) {
   bridge = _bridge;
 
+  hook.currentTab = 'components';
+  bridge.on('switch-tab', tab => {
+    hook.currentTab = tab;
+    if(tab === 'components') {
+      flush();
+    }
+  });
+
+  hook.off('flush');
+  hook.on('flush', () => {
+    if(hook.currentTab === 'components') {
+      flush();
+    }
+  });
+
   bridge.send('ready', hook.CC.ENGINE_VERSION);
   bridge.on('log-detected-cocos', () => {
     console.log(
@@ -20,4 +35,8 @@ export function initBackend(_bridge) {
     )
   });
 
+}
+
+function flush() {
+  console.log('flush');
 }

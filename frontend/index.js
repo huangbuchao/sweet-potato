@@ -53,7 +53,7 @@ function initApp(shell) {
     bridge.send('log-detected-cocos');
 
     bridge.on("ready", version => {
-      store.commit('SHOW_MESSAGE', 'Ready. Detected Cocos ' + version + '.');
+      store.commit('SHOW_MESSAGE', 'Detected Cocos ' + version + '.');
     });
 
     app = new Vue({
