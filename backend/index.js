@@ -37,6 +37,22 @@ export function initBackend(_bridge) {
 
 }
 
+function connect() {
+
+}
+
+function scan() {
+
+}
+
+function processInstance() {
+
+}
+
+function walk() {
+
+}
+
 function flush() {
   console.log('flush');
 }
