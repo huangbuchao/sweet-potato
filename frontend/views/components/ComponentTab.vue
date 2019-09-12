@@ -1,7 +1,7 @@
 <template>
   <div>
     <split-pane>
-      <component-instance
+      <component-tree
         v-if="defer(2)"
         slot="left"
         :instances="instances"
@@ -21,7 +21,7 @@ import { mapState } from 'vuex';
 import Defer from 'frontend/mixins/defer';
 
 import SplitPane from 'frontend/components/SplitPane.vue';
-import ComponentInstance from './ComponentInstance.vue';
+import ComponentTree from './ComponentTree.vue';
 import ComponentInspector from './ComponentInspector.vue';
 
 const superDef = {
@@ -35,7 +35,7 @@ const superDef = {
 export default {
   components: {
     SplitPane,
-    ComponentInstance,
+    ComponentTree,
     ComponentInspector
   },
 
