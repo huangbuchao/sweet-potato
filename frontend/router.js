@@ -5,7 +5,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import Components from "./views/components/Components.vue";
+import Components from "./views/components/ComponentTab.vue";
 import Events from "./views/events/Events.vue";
 import Stats from "./views/stats/Stats.vue";
 import Store from "./views/store/Store.vue";

@@ -41,7 +41,7 @@ export default {
 
   extends: superDef,
 
-  mixin: [
+  mixins: [
     Defer()
   ],
 
