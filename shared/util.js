@@ -126,9 +126,13 @@ export function get (object, path) {
   return object
 }
 
+export function focusInput (el) {
+  el.focus()
+  el.setSelectionRange(0, el.value.length)
+}
 
 
-//cust
+//custom
 export function thunkify(fnc) {
   const args = Array.prototype.slice.call(arguments, 1);
   return function(act) {
@@ -150,4 +154,13 @@ export function getType(target) {
     .call(target)
     .replace(/^\[object (.+)\]$/, "$1")
     .toLowerCase();
+}
+
+export function flatten (items) {
+  return items.reduce((acc, item) => {
+    if (item instanceof Array) acc.push(...flatten(item))
+    else if (item) acc.push(item)
+
+    return acc
+  }, [])
 }
