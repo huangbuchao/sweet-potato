@@ -176,7 +176,7 @@ export default {
 .header
   display flex
   align-items center
-  box-shadow 0 0 16px rgba(0, 0, 0, 0.3)
+  box-shadow 0 0 8px rgba(0, 0, 0, 0.3)
   font-size 14px
   position relative
 

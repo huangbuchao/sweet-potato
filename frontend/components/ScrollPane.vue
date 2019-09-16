@@ -10,7 +10,7 @@
       <slot name="scroll" />
     </div>
     <div
-      v-if="$slot.footer"
+      v-if="$slots.footer"
       class="footer"
     >
       <slot name="footer" />

@@ -37,11 +37,25 @@
 </template>
 
 <script>
-export default {
+import ScrollPane from '../../components/ScrollPane.vue';
+import ActionHeader from '../../components/ActionHeader.vue';
+//import ComponentInstance from './ComponentInstance.vue';
 
+export default {
+ components: {
+    ScrollPane,
+    ActionHeader
+  },
 }
 </script>
 
 <style lang="stylus">
+.tree
+  padding 5px
 
+.select-component
+  &.active
+    color $active-color
+    .vue-ui-icon
+      animation pulse 2s infinite linear
 </style>
