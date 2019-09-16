@@ -46,6 +46,25 @@ export default {
     ScrollPane,
     ActionHeader
   },
+
+  mixins: [],
+
+  props: {
+    instances: {
+      type: Array,
+      required: true
+    }
+  },
+
+  data() {
+    return {
+      selecting: false
+    };
+  },
+
+  methods: {
+
+  }
 }
 </script>
 
