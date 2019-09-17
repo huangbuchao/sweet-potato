@@ -79,8 +79,31 @@
 </template>
 
 <script>
-export default {
+import { mapState, mapMutations } from 'vuex';
+import { getComponentDisplayName, scrollIntoView, UNDEFINED } from 'shared/util';
 
+export default {
+	name: 'ComponentInstance',
+
+	props: {
+    instance: {
+      type: Object,
+      required: true
+    },
+    depth: {
+      type: Number,
+      required: true
+    }
+	},
+
+	computed: {
+		...mapState("components", [
+			'expansionMap',
+      'inspectedInstance',
+      'inspectedInstanceId',
+      'scrollToExpanded'
+		]),
+	}
 }
 </script>
 
