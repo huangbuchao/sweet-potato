@@ -2,7 +2,17 @@
  * @flow
  */
 import path from 'path';
+
 import * as CircularJSON from 'vendor/transfer';
+import { instanceMap, getCustomInstanceDetails } from 'backend';
+import SharedData from './shared-data';
+import { isChrome } from './env';
+
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * format with a cache
+ * /////////////////////////////////////////////////////////////////////
+ */
 
 function cached(func) {
   const cache = Object.create(null);
@@ -55,13 +65,15 @@ export function inDoc (node) {
 }
 
 /**
+ * /////////////////////////////////////////////////////////////////////
  * Stringify/parse data using CircularJSON.
+ * /////////////////////////////////////////////////////////////////////
  */
 
-export const UNDEFINED = '__vue_devtool_undefined__'
-export const INFINITY = '__vue_devtool_infinity__'
-export const NEGATIVE_INFINITY = '__vue_devtool_negative_infinity__'
-export const NAN = '__vue_devtool_nan__'
+export const UNDEFINED = '__potato_devtool_undefined__'
+export const INFINITY = '__potato_devtool_infinity__'
+export const NEGATIVE_INFINITY = '__potato_devtool_negative_infinity__'
+export const NAN = '__potato_devtool_nan__'
 
 export const SPECIAL_TOKENS = {
   'true': true,
@@ -91,6 +103,42 @@ export function specialTokenToString (value) {
   return false
 }
 
+
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * Needed to prevent stack overflow
+ * /////////////////////////////////////////////////////////////////////
+ */
+
+class EncodeCode {
+  constructor() {
+    this.map = new Map();
+  }
+
+  cache(data, factory) {
+    const res = this.map.get(data);
+    if(res) {
+      return res;
+    }else{
+      const result = factory(data);
+      this.map.set(data, result);
+      return result;
+    }
+  }
+
+  clear() {
+    this.map.clear();
+  }
+}
+
+const encodeCache = new EncodeCode();
+
+
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * **********
+ * /////////////////////////////////////////////////////////////////////
+ */
 
 const ESC = {
   '<': "&lt",
