@@ -103,10 +103,80 @@ export default {
       'inspectedInstanceId',
       'scrollToExpanded'
 		]),
+
+		expanded() {
+			return !!this.expansionMap[this.instance.id];
+		},
+
+		selected() {
+			return this.instance.id === this.inspectedInstanceId;
+		},
+
+		sortedChildren() {
+
+		},
+
+		displayName() {
+
+		},
+
+		componentHasKey() {
+
+		}
+	},
+
+	watch: {
+		scrollToExpanded() {
+
+		}
+	},
+
+	created() {
+
+	},
+
+	methods: {
+		...mapMutations(),
+
+		toggle() {
+
+		},
+
+		toggleWithValue() {
+
+		},
+
+		expand() {
+
+		},
+
+		collapse() {
+
+		},
+
+		enter() {
+
+		},
+
+		leave() {
+
+		},
+
+		select() {
+
+		},
+
+		scrollToInstance() {
+
+		},
+
+		scrollToView() {
+
+		},
 	}
 }
 </script>
 
 <style lang="stylus" scoped>
-
+.self
 </style>

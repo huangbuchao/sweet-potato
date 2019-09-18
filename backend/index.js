@@ -7,6 +7,8 @@ const hook = target.__POTATO_DEVTOOLS_GLOBAL_HOOK__;
 //const rootInstances = [];
 let bridge;
 
+export const instanceMap = target.__POTATO_DEVTOOLS_INSTANCE_MAP__ = new Map();
+
 export function initBackend(_bridge) {
   bridge = _bridge;
 
