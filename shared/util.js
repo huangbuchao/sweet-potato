@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
  * @flow
  */
@@ -106,7 +107,7 @@ export function specialTokenToString (value) {
 
 /**
  * /////////////////////////////////////////////////////////////////////
- * Needed to prevent stack overflow
+ * to prevent stack overflow for each serialization
  * /////////////////////////////////////////////////////////////////////
  */
 
@@ -133,10 +134,82 @@ class EncodeCode {
 
 const encodeCache = new EncodeCode();
 
+export function stringify(data) {
+  encodeCache.clear();
+  return CircularJSON.stringify(data, replacer);
+}
+
+function replacer(key) {
+  const val = this[key]
+  const type = typeof val
+  if (Array.isArray(val)) {
+    const l = val.length
+    if (l > MAX_ARRAY_SIZE) {
+      return {
+        _isArray: true,
+        length: l,
+        items: val.slice(0, MAX_ARRAY_SIZE)
+      }
+    }
+    return val
+  } else if (typeof val === 'string') {
+    if (val.length > MAX_STRING_SIZE) {
+      return val.substr(0, MAX_STRING_SIZE) + `... (${(val.length)} total length)`
+    } else {
+      return val
+    }
+  } else if (type === 'undefined') {
+    return UNDEFINED
+  } else if (val === Infinity) {
+    return INFINITY
+  } else if (val === -Infinity) {
+    return NEGATIVE_INFINITY
+  } else if (type === 'function') {
+    return getCustomFunctionDetails(val)
+  } else if (type === 'symbol') {
+    return `[native Symbol ${Symbol.prototype.toString.call(val)}]`
+  } else if (val !== null && type === 'object') {
+    const proto = Object.prototype.toString.call(val)
+    if (proto === '[object Map]') {
+
+    }
+  } else if (Number.isNaN(val)) {
+    return NAN
+  }
+}
 
 /**
  * /////////////////////////////////////////////////////////////////////
- * **********
+ * *** tranform function display style
+ * /////////////////////////////////////////////////////////////////////
+ */
+
+export function getCustomFunctionDetails(fnc) {
+  let string = '';
+  let matches = null;
+  try {
+    string = Function.prototype.toString.call(fnc);
+    matches = String.prototype.match.call(string, /\([\s\S]*?\)/);
+  } catch (error) {
+    //
+  }
+
+  const match = matches && matches[0];
+  const args = typeof match === 'string' ?
+    `(${match.substr(1, match.length - 2).split(',').map(s => s.trim()).join(', ')})` : '(?)'
+  const name = typeof fnc.name === 'string' ? fnc.name : '';
+
+  return {
+    _custom: {
+      type: 'funciton',
+      display: `<span>f</span> ${escape(name)}${args}`
+    }
+  };
+}
+
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * ********** escap ****** transform **********************************
  * /////////////////////////////////////////////////////////////////////
  */
 
@@ -180,13 +253,24 @@ export function focusInput (el) {
 }
 
 
-//custom
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * *** thunk (Partial function)
+ * /////////////////////////////////////////////////////////////////////
+ */
+
 export function thunkify(fnc) {
   const args = Array.prototype.slice.call(arguments, 1);
   return function(act) {
     fnc(act, Array.prototype.concat.apply(arguments, args));
   };
 }
+
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * *** inherit a object
+ * /////////////////////////////////////////////////////////////////////
+ */
 
 export function inherit(Child, Parent) {
   var Func = function() {};
@@ -197,12 +281,24 @@ export function inherit(Child, Parent) {
   Child.prototype.constructor = Child;
 }
 
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * *** type checker
+ * /////////////////////////////////////////////////////////////////////
+ */
+
 export function getType(target) {
   return Object.prototype.toString
     .call(target)
     .replace(/^\[object (.+)\]$/, "$1")
     .toLowerCase();
 }
+
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * *** flat a nest array
+ * /////////////////////////////////////////////////////////////////////
+ */
 
 export function flatten (items) {
   return items.reduce((acc, item) => {
