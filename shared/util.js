@@ -190,6 +190,8 @@ function replacer(key) {
   } else if (Number.isNaN(val)) {
     return NAN;
   }
+
+  return sanitize(val);
 }
 
 /**
@@ -313,6 +315,125 @@ export function reviveSet(val) {
 
 /**
  * /////////////////////////////////////////////////////////////////////
+ * Sanitize data to be posted to the other side.
+ * Since the message posted is sent with structured clone,
+ * need to filter out any types that might cause an error.
+ * /////////////////////////////////////////////////////////////////////
+ */
+
+function sanitize(data) {
+  if(
+    !isPlainObject(data) &&
+    !isPrimitive(data) &&
+    !Array.isArray(data)
+  ) {
+    return Object.prototype.toString.call(data);
+  } else {
+    return data;
+  }
+}
+
+export function isPlainObject(obj) {
+  return Object.prototype.toString.call(obj) === '[object Object]';
+}
+
+export function isPrimitive(value) {
+  if(value === null) {
+    return true;
+  }
+  const type = typeof obj;
+  return (type === 'string' || type === 'number' || type === 'boolean');
+}
+
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * Searches a key or value in the object, with a maximum deepness.
+ * Map containing the search result to prevent stack overflow
+ * by walking on the same object multiple times.
+ * /////////////////////////////////////////////////////////////////////
+ */
+
+const SEARCH_MAX_DEPTH = 10;
+
+export function searchDeepInObject(obj, searchTerm) {
+  const seen = new Map();
+  const result = internalSearchObject(obj, searchTerm.toLowerCase(), seen, 0);
+  seen.clear();
+  return result;
+}
+
+export function internalSearchObject(obj, searchTerm, seen, depth) {
+  if(depth > SEARCH_MAX_DEPTH) {
+    return false;
+  }
+
+  let match = false;
+  let key, value;
+  const keys = Object.keys(obj);
+  for (let i = 0; i < keys.length; i++) {
+    key = keys[i];
+    value = obj[key];
+    match = internalSearchCheck(searchTerm, key, value, seen, depth + 1);
+    if(match) {
+      break;
+    }
+  }
+  return match;
+}
+
+export function internalSearchArray(array, searchTerm, seen, depth) {
+  if (depth > SEARCH_MAX_DEPTH) {
+    return false
+  }
+  let match = false
+  let value
+  for (let i = 0; i < array.length; i++) {
+    value = array[i]
+    match = internalSearchCheck(searchTerm, null, value, seen, depth + 1)
+    if (match) {
+      break
+    }
+  }
+  return match
+}
+
+export function internalSearchCheck(searchTerm, key, value, seen, depth) {
+  let match = false;
+  let result;
+  if(key === '_custom') {
+    key = value.display;
+    value = value.value;
+  }
+
+  (result = specialTokenToString(value)) && (value = result);
+
+  if(key && compare(key, searchTerm)) {
+    match = true;
+    seen.set(value, true);
+  }else if(seen.has(value)) {
+    match = seen.get(value);
+  }else if(Array.isArray(value)) {
+    seen.set(value, null);
+    match = internalSearchArray(value, searchTerm, seen, depth);
+    seen.set(value, match);
+  }else if(isPlainObject(value)) {
+    seen.set(value, null);
+    match = internalSearchObject(value, searchTerm, seen, depth);
+    seen.set(value, match);
+  }else if(compare(value, searchTerm)) {
+    match = true;
+    seen.set(value, true);
+  }
+
+  return match;
+}
+
+function compare(value, searchTerm) {
+  return ('' + value).toLowerCase().indexOf(searchTerm) !== -1;
+}
+
+/**
+ * /////////////////////////////////////////////////////////////////////
  * ********** escap ****** transform **********************************
  * /////////////////////////////////////////////////////////////////////
  */
@@ -332,11 +453,27 @@ function escapeChar(match) {
   return ESC[match] || match;
 }
 
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * *** copy content to clipboard
+ * /////////////////////////////////////////////////////////////////////
+ */
+
 export function copyToClipboard(state) {
   if (typeof document === "undefined") return;
   const dummyTextArea = document.createElement("textArea");
-  dummyTextArea.textContent;
+  dummyTextArea.textContent = stringify(state);
+  document.body.appendChild(dummyTextArea);
+  dummyTextArea.select();
+  document.execCommand('copy');
+  document.body.removeChild(dummyTextArea);
 }
+
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * *** tools
+ * /////////////////////////////////////////////////////////////////////
+ */
 
 export function get(object, path) {
   const sections = Array.isArray(path) ? path : path.split(".");
@@ -348,6 +485,30 @@ export function get(object, path) {
   }
   return object;
 }
+
+export function set() {
+
+}
+
+export function has() {
+
+}
+
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * ***
+ * /////////////////////////////////////////////////////////////////////
+ */
+
+export function scrollIntoView() {
+
+}
+
+/**
+ * /////////////////////////////////////////////////////////////////////
+ * ***
+ * /////////////////////////////////////////////////////////////////////
+ */
 
 export function focusInput(el) {
   el.focus();
