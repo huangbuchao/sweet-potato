@@ -475,6 +475,14 @@ export function copyToClipboard(state) {
  * /////////////////////////////////////////////////////////////////////
  */
 
+export function sortByKey(state) {
+  return state && state.slice().sort((a, b) => {
+    if(a.key < b.key) return -1;
+    if(a.key > b.key) return 1;
+    return 0;
+  });
+}
+
 export function get(object, path) {
   const sections = Array.isArray(path) ? path : path.split(".");
   for (let i = 0; i < sections.length; i++) {
@@ -486,12 +494,30 @@ export function get(object, path) {
   return object;
 }
 
-export function set() {
-
+export function set (object, path, value, cb = null) {
+  const sections = Array.isArray(path) ? path : path.split('.')
+  while (sections.length > 1) {
+    object = object[sections.shift()]
+  }
+  const field = sections[0]
+  if (cb) {
+    cb(object, field, value)
+  } else {
+    object[field] = value
+  }
 }
 
-export function has() {
+export function has (object, path, parent = false) {
+  if (typeof object === 'undefined') {
+    return false
+  }
 
+  const sections = Array.isArray(path) ? path : path.split('.')
+  const size = !parent ? 1 : 2
+  while (object && sections.length > size) {
+    object = object[sections.shift()]
+  }
+  return object != null && object.hasOwnProperty(sections[0])
 }
 
 /**
@@ -500,8 +526,20 @@ export function has() {
  * /////////////////////////////////////////////////////////////////////
  */
 
-export function scrollIntoView() {
-
+export function scrollIntoView (scrollParent, el, center = true) {
+  const parentTop = scrollParent.scrollTop
+  const parentHeight = scrollParent.offsetHeight
+  const elBounds = el.getBoundingClientRect()
+  const parentBounds = scrollParent.getBoundingClientRect()
+  const top = elBounds.top - parentBounds.top + scrollParent.scrollTop
+  const height = el.offsetHeight
+  if (center) {
+    scrollParent.scrollTop = top + (height - parentHeight) / 2
+  } else if (top < parentTop) {
+    scrollParent.scrollTop = top
+  } else if (top + height > parentTop + parentHeight) {
+    scrollParent.scrollTop = top - parentHeight + height
+  }
 }
 
 /**
