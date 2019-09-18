@@ -2,12 +2,12 @@
 /**
  * @flow
  */
-import path from 'path';
+import path from "path";
 
-import * as CircularJSON from 'vendor/transfer';
-import { instanceMap, getCustomInstanceDetails } from 'backend';
-import SharedData from './shared-data';
-import { isChrome } from './env';
+import * as CircularJSON from "vendor/transfer";
+import { instanceMap, getCustomInstanceDetails } from "backend";
+import SharedData from "./shared-data";
+import { isChrome } from "./env";
 
 /**
  * /////////////////////////////////////////////////////////////////////
@@ -35,34 +35,41 @@ export const camelize = cached(str => {
 
 const kebabizeREG = /([a-z0-9])([A-Z])/g;
 export const kebabize = cached(str => {
-  return str && str.replace(kebabizeREG, (_, lowerCaseCharacter, upperCaseCharacter) => {
-    return `${lowerCaseCharacter}-${upperCaseCharacter}`;
-  }).toLowerCase();
+  return (
+    str &&
+    str
+      .replace(kebabizeREG, (_, lowerCaseCharacter, upperCaseCharacter) => {
+        return `${lowerCaseCharacter}-${upperCaseCharacter}`;
+      })
+      .toLowerCase()
+  );
 });
 
 function toUpper(_, c) {
-  return c ? c.toUpperCase() : '';
+  return c ? c.toUpperCase() : "";
 }
 
-export function getComponentDisplayName (originalName, style = 'class') {
+export function getComponentDisplayName(originalName, style = "class") {
   switch (style) {
-    case 'class':
-      return classify(originalName)
-    case 'kebab':
-      return kebabize(originalName)
-    case 'original':
+    case "class":
+      return classify(originalName);
+    case "kebab":
+      return kebabize(originalName);
+    case "original":
     default:
-      return originalName
+      return originalName;
   }
 }
 
-export function inDoc (node) {
-  if (!node) return false
-  var doc = node.ownerDocument.documentElement
-  var parent = node.parentNode
-  return doc === node ||
+export function inDoc(node) {
+  if (!node) return false;
+  var doc = node.ownerDocument.documentElement;
+  var parent = node.parentNode;
+  return (
+    doc === node ||
     doc === parent ||
-    !!(parent && parent.nodeType === 1 && (doc.contains(parent)))
+    !!(parent && parent.nodeType === 1 && doc.contains(parent))
+  );
 }
 
 /**
@@ -71,39 +78,38 @@ export function inDoc (node) {
  * /////////////////////////////////////////////////////////////////////
  */
 
-export const UNDEFINED = '__potato_devtool_undefined__'
-export const INFINITY = '__potato_devtool_infinity__'
-export const NEGATIVE_INFINITY = '__potato_devtool_negative_infinity__'
-export const NAN = '__potato_devtool_nan__'
+export const UNDEFINED = "__potato_devtool_undefined__";
+export const INFINITY = "__potato_devtool_infinity__";
+export const NEGATIVE_INFINITY = "__potato_devtool_negative_infinity__";
+export const NAN = "__potato_devtool_nan__";
 
 export const SPECIAL_TOKENS = {
-  'true': true,
-  'false': false,
-  'undefined': UNDEFINED,
-  'null': null,
-  '-Infinity': NEGATIVE_INFINITY,
-  'Infinity': INFINITY,
-  'NaN': NAN
-}
+  true: true,
+  false: false,
+  undefined: UNDEFINED,
+  null: null,
+  "-Infinity": NEGATIVE_INFINITY,
+  Infinity: INFINITY,
+  NaN: NAN
+};
 
-export const MAX_STRING_SIZE = 10000
-export const MAX_ARRAY_SIZE = 5000
+export const MAX_STRING_SIZE = 10000;
+export const MAX_ARRAY_SIZE = 5000;
 
-export function specialTokenToString (value) {
+export function specialTokenToString(value) {
   if (value === null) {
-    return 'null'
+    return "null";
   } else if (value === UNDEFINED) {
-    return 'undefined'
+    return "undefined";
   } else if (value === NAN) {
-    return 'NaN'
+    return "NaN";
   } else if (value === INFINITY) {
-    return 'Infinity'
+    return "Infinity";
   } else if (value === NEGATIVE_INFINITY) {
-    return '-Infinity'
+    return "-Infinity";
   }
-  return false
+  return false;
 }
-
 
 /**
  * /////////////////////////////////////////////////////////////////////
@@ -118,9 +124,9 @@ class EncodeCode {
 
   cache(data, factory) {
     const res = this.map.get(data);
-    if(res) {
+    if (res) {
       return res;
-    }else{
+    } else {
       const result = factory(data);
       this.map.set(data, result);
       return result;
@@ -140,52 +146,60 @@ export function stringify(data) {
 }
 
 function replacer(key) {
-  const val = this[key]
-  const type = typeof val
+  const val = this[key];
+  const type = typeof val;
   if (Array.isArray(val)) {
-    const l = val.length
+    const l = val.length;
     if (l > MAX_ARRAY_SIZE) {
       return {
         _isArray: true,
         length: l,
         items: val.slice(0, MAX_ARRAY_SIZE)
-      }
+      };
     }
-    return val
-  } else if (typeof val === 'string') {
+    return val;
+  } else if (typeof val === "string") {
     if (val.length > MAX_STRING_SIZE) {
-      return val.substr(0, MAX_STRING_SIZE) + `... (${(val.length)} total length)`
+      return (
+        val.substr(0, MAX_STRING_SIZE) + `... (${val.length} total length)`
+      );
     } else {
-      return val
+      return val;
     }
-  } else if (type === 'undefined') {
-    return UNDEFINED
+  } else if (type === "undefined") {
+    return UNDEFINED;
   } else if (val === Infinity) {
-    return INFINITY
+    return INFINITY;
   } else if (val === -Infinity) {
-    return NEGATIVE_INFINITY
-  } else if (type === 'function') {
-    return getCustomFunctionDetails(val)
-  } else if (type === 'symbol') {
-    return `[native Symbol ${Symbol.prototype.toString.call(val)}]`
-  } else if (val !== null && type === 'object') {
-    const proto = Object.prototype.toString.call(val)
-    if (proto === '[object Map]') {
-
+    return NEGATIVE_INFINITY;
+  } else if (type === "function") {
+    return getCustomFunctionDetails(val);
+  } else if (type === "symbol") {
+    return `[native Symbol ${Symbol.prototype.toString.call(val)}]`;
+  } else if (val !== null && type === "object") {
+    const proto = Object.prototype.toString.call(val);
+    if (proto === "[object Map]") {
+      return encodeCache.cache(val, getCustomMapDetails(val));
+    } else if (proto === "[object Set]") {
+      return encodeCache.cache(val, () => getCustomSetDetails(val));
+    } else if (proto === "[object RegExp]") {
+      return `[native RegExp ${RegExp.prototype.toString.call(val)}]`;
+    } else if (proto === "[object Date]") {
+      return `[native Date ${Date.prototype.toString.call(val)}]`;
     }
   } else if (Number.isNaN(val)) {
-    return NAN
+    return NAN;
   }
 }
 
 /**
  * /////////////////////////////////////////////////////////////////////
- * *** tranform function display style
+ * *** tranform display style(format)
  * /////////////////////////////////////////////////////////////////////
  */
 
 export function getCustomFunctionDetails(fnc) {
-  let string = '';
+  let string = "";
   let matches = null;
   try {
     string = Function.prototype.toString.call(fnc);
@@ -195,16 +209,106 @@ export function getCustomFunctionDetails(fnc) {
   }
 
   const match = matches && matches[0];
-  const args = typeof match === 'string' ?
-    `(${match.substr(1, match.length - 2).split(',').map(s => s.trim()).join(', ')})` : '(?)'
-  const name = typeof fnc.name === 'string' ? fnc.name : '';
+  const args =
+    typeof match === "string"
+      ? `(${match.substr(1, match.length - 2).split(",").map(s => s.trim()).join(", ")})`
+      : "(?)";
+  const name = typeof fnc.name === "string" ? fnc.name : "";
 
   return {
     _custom: {
-      type: 'funciton',
+      type: "funciton",
       display: `<span>f</span> ${escape(name)}${args}`
     }
   };
+}
+
+export function getCustomMapDetails(val) {
+  const list = [];
+  val.forEach((value, key) => {
+    list.push({
+      key,
+      value
+    });
+  });
+
+  return {
+    _custom: {
+      type: "map",
+      display: "Map",
+      readOnly: true,
+      fields: {
+        abstract: true
+      }
+    }
+  };
+}
+
+export function getCustomSetDetails(val) {
+  const list = Array.from(val);
+  return {
+    _custom: {
+      type: "set",
+      display: `Set[${list.length}]`,
+      value: list,
+      readOnly: true
+    }
+  };
+}
+
+export function parse(data, revive) {
+  return revive ? CircularJSON.parse(data, reviver) : CircularJSON.parse(data);
+}
+
+const specialTypeRE = /^\[native (\w+) (.*)\]$/;
+const symbolRE = /^\[native Symbol Symbol\((.*)\)\]$/;
+
+function reviver(key, val) {
+  if (val === UNDEFINED) {
+    return undefined;
+  } else if (val === INFINITY) {
+    return Infinity;
+  } else if (val === NEGATIVE_INFINITY) {
+    return -Infinity;
+  } else if (val === NAN) {
+    return NaN;
+  } else if (val && val._custom) {
+    if (val._custom.type === "component") {
+      return instanceMap.get(val._custom.id);
+    } else if (val._custom.type === "map") {
+      return reviveMap(val);
+    } else if (val._custom.type === "set") {
+      return reviveSet(val);
+    }
+  } else if (symbolRE.test(val)) {
+    const [, string] = symbolRE.exec(val);
+    return Symbol.for(string);
+  } else if (specialTypeRE.test(val)) {
+    const [, type, string] = specialTypeRE.exec(val);
+    return new window[type](string);
+  } else {
+    return val;
+  }
+}
+
+export function reviveMap(val) {
+  const result = new Map();
+  const list = val._custom.value;
+  for (let i = 0; i < list.length; i++) {
+    const { key, value } = list[i];
+    result.set(key, reviver(null, value));
+  }
+  return result;
+}
+
+export function reviveSet(val) {
+  const result = new Set();
+  const list = val._custom.value;
+  for (let i = 0; i < list.length; i++) {
+    const value = list[i];
+    result.add(reviver(null, value));
+  }
+  return result;
 }
 
 /**
@@ -214,10 +318,10 @@ export function getCustomFunctionDetails(fnc) {
  */
 
 const ESC = {
-  '<': "&lt",
-  '>': "&gt",
+  "<": "&lt",
+  ">": "&gt",
   '"': "&quot",
-  '&': "&amp"
+  "&": "&amp"
 };
 
 export function escape(s) {
@@ -229,29 +333,26 @@ function escapeChar(match) {
 }
 
 export function copyToClipboard(state) {
-  if(typeof document === 'undefined') return;
-  const dummyTextArea = document.createElement('textArea');
+  if (typeof document === "undefined") return;
+  const dummyTextArea = document.createElement("textArea");
   dummyTextArea.textContent;
 }
 
-
-
-export function get (object, path) {
-  const sections = Array.isArray(path) ? path : path.split('.')
+export function get(object, path) {
+  const sections = Array.isArray(path) ? path : path.split(".");
   for (let i = 0; i < sections.length; i++) {
-    object = object[sections[i]]
+    object = object[sections[i]];
     if (!object) {
-      return undefined
+      return undefined;
     }
   }
-  return object
+  return object;
 }
 
-export function focusInput (el) {
-  el.focus()
-  el.setSelectionRange(0, el.value.length)
+export function focusInput(el) {
+  el.focus();
+  el.setSelectionRange(0, el.value.length);
 }
-
 
 /**
  * /////////////////////////////////////////////////////////////////////
@@ -300,11 +401,11 @@ export function getType(target) {
  * /////////////////////////////////////////////////////////////////////
  */
 
-export function flatten (items) {
+export function flatten(items) {
   return items.reduce((acc, item) => {
-    if (item instanceof Array) acc.push(...flatten(item))
-    else if (item) acc.push(item)
+    if (item instanceof Array) acc.push(...flatten(item));
+    else if (item) acc.push(item);
 
-    return acc
-  }, [])
+    return acc;
+  }, []);
 }
