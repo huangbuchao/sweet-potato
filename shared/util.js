@@ -6,8 +6,8 @@ import path from "path";
 
 import * as CircularJSON from "vendor/transfer";
 import { instanceMap, getCustomInstanceDetails } from "backend";
-import SharedData from "./shared-data";
-import { isChrome } from "./env";
+// import SharedData from "./shared-data";
+// import { isChrome } from "./env";
 
 /**
  * /////////////////////////////////////////////////////////////////////
@@ -186,6 +186,8 @@ function replacer(key) {
       return `[native RegExp ${RegExp.prototype.toString.call(val)}]`;
     } else if (proto === "[object Date]") {
       return `[native Date ${Date.prototype.toString.call(val)}]`;
+    } else if(val._isNode) {
+      return encodeCache.cache(val, getCustomInstanceDetails(val));
     }
   } else if (Number.isNaN(val)) {
     return NAN;

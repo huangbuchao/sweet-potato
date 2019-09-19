@@ -58,3 +58,7 @@ function walk() {
 function flush() {
   console.log('flush');
 }
+
+export function getCustomInstanceDetails() {
+
+}
