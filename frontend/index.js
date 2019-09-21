@@ -9,6 +9,7 @@ import './plugins';
 import * as filters from './filters';
 import { createStore } from './store';
 import router from './router';
+import SharedData, { init as initSharedData, destroy as destroySharedData } from 'shared/shared-data'
 
 for (const key in filters) {
   Vue.filter(key, filters[key]);
@@ -47,6 +48,14 @@ export function initDevtools(shell) {
 function initApp(shell) {
   shell.connect(bridge => {
     window.bridge = bridge;
+
+    if(Vue.prototype.hasOwnProperty('$shared')) {
+      destroySharedData();
+    }else{
+      Object.defineProperty(Vue.prototype, '$shared', {
+        get: () => SharedData
+      });
+    }
 
     const store = createStore();
 

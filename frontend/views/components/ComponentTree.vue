@@ -32,7 +32,7 @@
 import { mapState, mapGetters } from "vuex";
 import ScrollPane from "../../components/ScrollPane.vue";
 import ActionHeader from "../../components/ActionHeader.vue";
-//import ComponentInstance from './ComponentInstance.vue';
+import ComponentInstance from './ComponentInstance.vue';
 
 import { classify, focusInput } from 'shared/util'
 
@@ -65,7 +65,7 @@ export default {
       if (this.$shared.displayDensity === "auto") {
         return this.highDensity;
       }
-      return (this.$shared.displayDensity = "high");
+      return (this.$shared.displayDensity === "high");
     }
   },
 
