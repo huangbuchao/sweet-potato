@@ -14,11 +14,15 @@ function Queue() {
 Queue.prototype = {
   constructor: Queue,
 
+  emitProxy(event, cb) {
+    cb ? cb() : this.emit(event);
+  },
+
   kebabEmit(event) {
     //state lock
     if(this.status === 'ready') {
       this.status = 'pending'
-      this.emit(event, () => this.status = 'ready');
+      this.emitProxy(event, () => this.status = 'ready');
     }
   },
 
@@ -29,7 +33,7 @@ Queue.prototype = {
       this.queue[event.type] = [event];
     }
 
-    this.emit(event, () => {
+    this.emitProxy(event, () => {
       this.queue.forEach(e => this.emit(e));
     });
   }

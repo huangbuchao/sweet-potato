@@ -20,6 +20,56 @@ export function initBackend(_bridge) {
     }
   });
 
+  const testInstances = {inspectedInstance: {}, instances: [
+    {
+      "uid":2,
+      "id":"1:2",
+      "name":"Root",
+      "inactive":false,
+      "children":[
+        {
+          "uid":2,
+          "id":"1:2",
+          "name":"Node1",
+          "inactive":false,
+          "children":[
+            {
+              "uid":2,
+              "id":"1:2",
+              "name":"Node1-2",
+              "inactive":false,
+              "children":[],
+              "top":"__potato_devtool_infinity__",
+              "consoleId":null
+            },
+            {
+              "uid":2,
+              "id":"1:2",
+              "name":"Node1-2",
+              "inactive":false,
+              "children":[],
+              "top":"__potato_devtool_infinity__",
+              "consoleId":null
+            }
+          ],
+          "top":"__potato_devtool_infinity__",
+          "consoleId":null
+        },
+        {
+          "uid":2,
+          "id":"1:2",
+          "name":"Node2",
+          "inactive":false,
+          "children":[],
+          "top":"__potato_devtool_infinity__",
+          "consoleId":null
+        }
+      ],
+      "top":"__potato_devtool_infinity__",
+      "consoleId":null
+    }
+  ]};
+
   hook.off('flush');
   hook.on('flush', () => {
     if(hook.currentTab === 'components') {
