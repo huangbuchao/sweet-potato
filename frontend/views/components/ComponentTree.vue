@@ -3,7 +3,7 @@
     <action-header slot="header">
       <div v-tooltip="$t('ComponentTree.filter.tooltip')" class="search">
         <VueIcon icon="search" />
-        <input ref="filterInstances" placeholder="Filter components" @input="filterInstances" />
+        <input ref="filterInstances" placeholder="Filter (text or /regexp/)" @input="filterInstances" />
       </div>
       <a
         v-tooltip="$t('ComponentTree.select.tooltip')"
