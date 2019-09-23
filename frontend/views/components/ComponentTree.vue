@@ -22,7 +22,7 @@
         v-for="instance in instances"
         :key="instance.id"
         :instance="instance"
-        :depth="depth"
+        :depth="0"
       />
     </div>
   </scroll-pane>
@@ -39,7 +39,8 @@ import { classify, focusInput } from 'shared/util'
 export default {
   components: {
     ScrollPane,
-    ActionHeader
+    ActionHeader,
+    ComponentInstance
   },
 
   mixins: [],
@@ -129,17 +130,12 @@ export default {
 </script>
 
 <style lang="stylus">
-.tree {
-  padding: 5px;
-}
+.tree
+  padding 5px
 
-.select-component {
-  &.active {
-    color: $active-color;
-
-    .vue-ui-icon {
-      animation: pulse 2s infinite linear;
-    }
-  }
-}
+.select-component
+  &.active
+    color $active-color
+    .vue-ui-icon
+      animation pulse 2s infinite linear
 </style>

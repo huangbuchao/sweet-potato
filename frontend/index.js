@@ -10,6 +10,7 @@ import * as filters from './filters';
 import { createStore } from './store';
 import router from './router';
 import SharedData, { init as initSharedData, destroy as destroySharedData } from 'shared/shared-data'
+import { parse } from 'shared/util'
 
 for (const key in filters) {
   Vue.filter(key, filters[key]);
@@ -64,6 +65,10 @@ function initApp(shell) {
     bridge.on("ready", version => {
       store.commit('SHOW_MESSAGE', 'Detected Cocos ' + version + '.');
     });
+
+    bridge.on('flush', payload => {
+      store.commit('components/FLUSH', parse(payload))
+    })
 
     app = new Vue({
       extends: App,

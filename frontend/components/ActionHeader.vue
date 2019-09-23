@@ -1,5 +1,5 @@
 <template>
-  <div class="action-pane">
+  <div class="action-header">
     <slot />
   </div>
 </template>

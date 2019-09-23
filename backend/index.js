@@ -29,43 +29,43 @@ export function initBackend(_bridge) {
       "children":[
         {
           "uid":2,
-          "id":"1:2",
+          "id":"1:3",
           "name":"Node1",
           "inactive":false,
           "children":[
             {
               "uid":2,
-              "id":"1:2",
+              "id":"1:6",
               "name":"Node1-2",
               "inactive":false,
               "children":[],
-              "top":"__potato_devtool_infinity__",
+              "top":"",
               "consoleId":null
             },
             {
               "uid":2,
-              "id":"1:2",
+              "id":"1:7",
               "name":"Node1-2",
               "inactive":false,
               "children":[],
-              "top":"__potato_devtool_infinity__",
+              "top":"",
               "consoleId":null
             }
           ],
-          "top":"__potato_devtool_infinity__",
+          "top":"",
           "consoleId":null
         },
         {
           "uid":2,
-          "id":"1:2",
+          "id":"1:4",
           "name":"Node2",
           "inactive":false,
           "children":[],
-          "top":"__potato_devtool_infinity__",
+          "top":"",
           "consoleId":null
         }
       ],
-      "top":"__potato_devtool_infinity__",
+      "top":"",
       "consoleId":null
     }
   ]};
@@ -76,7 +76,7 @@ export function initBackend(_bridge) {
       flush();
     }
   });
-
+  bridge.send('flush', JSON.stringify(testInstances));
   bridge.send('ready', hook.CC.ENGINE_VERSION);
   bridge.on('log-detected-cocos', () => {
     console.log(
