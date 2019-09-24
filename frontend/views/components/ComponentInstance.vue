@@ -27,7 +27,7 @@
 						}" class="arrow right" />
         </span>
 
-        <span class="angle-bracket">&lt;</span>
+        <span class="angle-bracket"></span>
 
         <span class="item-name">{{displayName}}</span>
 
@@ -36,7 +36,7 @@
           <span class="attr-value">{{instance.renderAmount}}</span>
         </span>
 
-        <span class="angle-bracket">&gt;</span>
+        <span class="angle-bracket"></span>
       </span>
 
       <span

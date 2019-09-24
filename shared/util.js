@@ -610,3 +610,8 @@ export function flatten(items) {
     return acc;
   }, []);
 }
+
+
+export function getComponentName() {
+
+}

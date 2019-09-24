@@ -6,12 +6,12 @@
         slot="left"
         :instances="instances"
       />
-      <!-- <component-inspector
+      <component-inspector
         v-if="defer(3)"
         slot="right"
         :target="inspectedInstance"
         :loading="loading"
-      /> -->
+      />
     </split-pane>
   </div>
 </template>
