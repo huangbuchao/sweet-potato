@@ -1,3 +1,5 @@
+//@flow
+
 export function installToast(target) {
   if (typeof document === "undefined") return;
   let toastEl = null;
