@@ -17,7 +17,7 @@ const inCC = !!target.cc;
 //     "background: #e0d3d3 ; padding: 2px; border-radius: 3px 3px 3px 3px;  color: red"
 //   );
 
-(function() {
+(function(window) {
   if(!window.__POTATO_DEVTOOLS_LAUNCHER__) {
     window.__POTATO_DEVTOOLS_LAUNCHER__ = function () {
       inBroswer && devtools && inCC
