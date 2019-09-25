@@ -58,6 +58,12 @@ function initApp(shell) {
       });
     }
 
+    initSharedData({
+      bridge,
+      Vue,
+      persist: true
+    })
+
     const store = createStore();
 
     bridge.send('log-detected-cocos');

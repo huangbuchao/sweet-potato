@@ -9,14 +9,14 @@ import { stringify, parse, set, has, getComponentName } from "../shared/util";
 import { init as initStorage } from "../shared/storage";
 import SharedData, { init as initSharedData } from "../shared/shared-data";
 
-const hook = target.__POTATO_DEVTOOLS_GLOBAL_HOOK__;
-const rootInstances = [];
 let bridge;
-let currentInspectedId;
 let rootUID = 0;
 let captureCount = 0;
+let currentInspectedId;
 
+const rootInstances = [];
 const captureIds = new Map(); //dedupe
+const hook = target.__POTATO_DEVTOOLS_GLOBAL_HOOK__;
 
 export const instanceMap = (target.__POTATO_DEVTOOLS_INSTANCE_MAP__ = new Map());
 
@@ -30,6 +30,12 @@ export function initBackend(_bridge) {
 
 function connect(cc) {
   initStorage().then(() => {
+
+    // initSharedData({
+    //   bridge,
+    //   cc
+    // });
+
     hook.currentTab = "components";
     bridge.on("switch-tab", tab => {
       hook.currentTab = tab;
