@@ -107,6 +107,7 @@ function connect(cc) {
       );
     });
 
+    //sometime cc.director not already.
     setTimeout(() => {
       scan();
     }, 0);
@@ -119,13 +120,12 @@ export function findInstance(id) {
 
 function scan() {
   rootInstances = [];
-  console.log('scan', hook.cc);
   const scene = hook.cc.director._scene;
-  const canvas = scene.children;
+  const canvas = scene && scene.children;
 
-  rootInstanceId = canvas && canvas[0] && canvas[0].__instanceId;
+  rootInstanceId = canvas && canvas[0].__instanceId;
 
-  rootInstances.push(...canvas);
+  canvas && rootInstances.push(...canvas);
 
   flush();
 }
