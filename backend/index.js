@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /**
  * @flow
  */
@@ -174,14 +173,15 @@ export function findInstance(id) {
 
 function scan() {
   const rootInstance = hook.cc.director._scene;
-  if(!rootInstance.__POTATO_DEVTOOLS_ROOT_UID__) {
-    rootInstance.__POTATO_DEVTOOLS_ROOT_UID__ = ++rootUID;
-  }
+
+  rootInstance.__POTATO_DEVTOOLS_ROOT_UID__ = ++rootUID;
+
   flush();
 }
 
 //function processInstance() {}
 
+// eslint-disable-next-line no-unused-vars
 function walk(node, fnc) {
   if(node.children) {
     for (let i = 0; i < node.children.length; i++) {
@@ -205,11 +205,45 @@ function flush() {
 
   const payload = stringify({
     inspectInstance: getInstanceDetails(currentInspectedId),
-    instances: null
+    instances: findQualifiedInstances(rootInstance)
   });
+
+  if(process.env.NODE_ENV !== 'production') {
+    console.log(`[flush]: serialized ${captureCount} instances${
+      isBrowser ? `, took ${window.performance.now() - start}ms.` : '.'}`
+    );
+  }
+  console.log('instanceMap: ', instanceMap)
+  console.log('captureIds: ', captureIds)
+  console.log('payload: ', payload)
+  bridge.send('flush', payload)
 }
 
 function getInstanceDetails() {
+
+}
+
+function findQualifiedInstances(instances) {
+  return !filter ?
+    capture(instances) :
+    Array.prototype.concat.call([], instances.map(findQualifiedChildren));
+}
+
+function findQualifiedChildren() {
+
+}
+
+function isQualified(instance) {
+  let reg = /^\/(\w+)\/$/;
+  const name = instance.name;
+  if(filter.test(reg)) {
+    return name.test(new RegExp(name.match(reg)[1]));
+  }else{
+    return name.indexOf(filter) > -1;
+  }
+}
+
+function capture() {
 
 }
 
