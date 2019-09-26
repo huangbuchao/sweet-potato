@@ -1,8 +1,7 @@
-//@flow
-
-//deal with intensive events.
-//give two solution
-
+/**
+ * deal with intensive events.
+ * give two solution
+ */
 import Event from './event';
 import { inherit } from "shared/util";
 
