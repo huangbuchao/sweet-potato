@@ -325,9 +325,9 @@ export function reviveSet(val) {
 
 function sanitize(data) {
   if(
-    !isPlainObject(data) &&
     !isPrimitive(data) &&
-    !Array.isArray(data)
+    !Array.isArray(data) &&
+    !isPlainObject(data)
   ) {
     return Object.prototype.toString.call(data);
   } else {
@@ -343,7 +343,7 @@ export function isPrimitive(value) {
   if(value === null) {
     return true;
   }
-  const type = typeof obj;
+  const type = typeof value;
   return (type === 'string' || type === 'number' || type === 'boolean');
 }
 

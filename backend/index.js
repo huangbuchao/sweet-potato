@@ -5,70 +5,17 @@
 import { target, isBrowser } from "shared/env";
 import { highLight, unHighLight, getInstanceRect } from "./highlighter";
 import ComponentSelector from "./component-selector";
-import { stringify, parse, set, has, getComponentName } from "../shared/util";
+import { stringify, parse, set, has, getComponentName, flatten } from "../shared/util";
 import { init as initStorage } from "../shared/storage";
 import SharedData, { init as initSharedData } from "../shared/shared-data";
 import { installToast } from './toast';
 
-const testInstances = {
-  inspectedInstance: {},
-  instances: [
-    {
-      uid: 2,
-      id: "1:2",
-      name: "Root",
-      inactive: false,
-      children: [
-        {
-          uid: 2,
-          id: "1:3",
-          name: "Node1",
-          inactive: false,
-          children: [
-            {
-              uid: 2,
-              id: "1:6",
-              name: "Node1-2",
-              inactive: false,
-              children: [],
-              top: "",
-              consoleId: null
-            },
-            {
-              uid: 2,
-              id: "1:7",
-              name: "Node1-2",
-              inactive: false,
-              children: [],
-              top: "",
-              consoleId: null
-            }
-          ],
-          top: "",
-          consoleId: null
-        },
-        {
-          uid: 2,
-          id: "1:4",
-          name: "Node2",
-          inactive: false,
-          children: [],
-          top: "",
-          consoleId: null
-        }
-      ],
-      top: "",
-      consoleId: null
-    }
-  ]
-};
-
 let bridge;
 let filter = '';
-let rootUID = 0;
+let rootInstanceId;
 let captureCount = 0;
 let currentInspectedId;
-let rootInstance = null;
+let rootInstances = [];
 
 const captureIds = new Map(); //dedupe
 const hook = target.__POTATO_DEVTOOLS_GLOBAL_HOOK__;
@@ -149,7 +96,6 @@ function connect(cc) {
 
     target.__POTATO_DEVTOOLS_INSPECT__ = inspectInstance;
 
-    bridge.send("flush", JSON.stringify(testInstances));
     bridge.send("ready", hook.cc.ENGINE_VERSION);
 
     bridge.on("log-detected-cocos", () => {
@@ -172,14 +118,15 @@ export function findInstance(id) {
 }
 
 function scan() {
-  const rootInstance = hook.cc.director._scene;
+  const scene = hook.cc.director._scene;
+  const canvas = scene.children;
 
-  rootInstance.__POTATO_DEVTOOLS_ROOT_UID__ = ++rootUID;
+  rootInstanceId = canvas && canvas[0] && canvas[0].__instanceId;
+
+  rootInstances.push(...canvas);
 
   flush();
 }
-
-//function processInstance() {}
 
 // eslint-disable-next-line no-unused-vars
 function walk(node, fnc) {
@@ -205,7 +152,7 @@ function flush() {
 
   const payload = stringify({
     inspectInstance: getInstanceDetails(currentInspectedId),
-    instances: findQualifiedInstances(rootInstance)
+    instances: findQualifiedInstances(rootInstances)
   });
 
   if(process.env.NODE_ENV !== 'production') {
@@ -225,12 +172,12 @@ function getInstanceDetails() {
 
 function findQualifiedInstances(instances) {
   return !filter ?
-    capture(instances) :
+    instances.map(capture) :
     Array.prototype.concat.call([], instances.map(findQualifiedChildren));
 }
 
-function findQualifiedChildren() {
-
+function findQualifiedChildren(instance) {
+  return isQualified(instance) ? capture(instance) : findQualifiedInstances(instance.children);
 }
 
 function isQualified(instance) {
@@ -243,8 +190,51 @@ function isQualified(instance) {
   }
 }
 
-function capture() {
+function capture(instance, index, list) {
+  if(process.env.NODE_ENV !== 'production') {
+    captureCount++;
+  }
 
+  instance.__POTATO_DEVTOOLS_UID__ = getUniqueID(instance);
+
+  if(captureIds.has(instance.__POTATO_DEVTOOLS_UID__)) {
+    return;
+  }else{
+    captureIds.set(instance.__POTATO_DEVTOOLS_UID__, undefined);
+  }
+
+  const name = instance.name ? instance.name : 'AnonymousNode';
+
+  mark(instance);
+
+  const ret = {
+    uid: instance.__instanceId,
+    id: instance.__POTATO_DEVTOOLS_UID__,
+    name,
+    inactive: !instance.active,
+    children: instance.children.
+      map(capture).
+      filter(Boolean)
+  };
+
+  if((!list || list.length > 1) && instance.active) {
+    const rect = getInstanceRect(instance);
+    ret.top = rect ? rect.top : Infinity;
+  }else{
+    ret.top = Infinity;
+  }
+
+  return ret;
+}
+
+function getUniqueID(instance) {
+  return `${rootInstanceId}:${instance.__instanceId}`;
+}
+
+function mark(instance) {
+  if(!instanceMap.has(instance.__POTATO_DEVTOOLS_UID__)) {
+    instanceMap.set(instance.__POTATO_DEVTOOLS_UID__, instance);
+  }
 }
 
 export function getCustomInstanceDetails() {}

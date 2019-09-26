@@ -11,7 +11,7 @@ export function installHook(target) {
   if (target.hasOwnProperty("__POTATO_DEVTOOLS_GLOBAL_HOOK__")) return;
 
   const hook = {
-    CC: null,
+    cc: null,
 
     _buffer: [],
 
