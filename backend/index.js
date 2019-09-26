@@ -118,6 +118,8 @@ export function findInstance(id) {
 }
 
 function scan() {
+  rootInstances = [];
+  console.log('scan', hook.cc);
   const scene = hook.cc.director._scene;
   const canvas = scene.children;
 

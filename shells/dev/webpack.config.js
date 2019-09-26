@@ -5,9 +5,9 @@ const FriendlyErrorsPlugin = require("friendly-errors-webpack-plugin");
 
 module.exports = {
   entry: {
-    devtools: "./src/devtools.js",
-    backend: "./src/backend.js",
     hook: "./src/hook.js",
+    backend: "./src/backend.js",
+    devtools: "./src/devtools.js",
     launch: "../../backend/mock-launcher.js"
   },
   output: {
