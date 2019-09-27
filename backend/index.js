@@ -72,7 +72,7 @@ function connect(cc) {
     });
 
     bridge.on('filter-instance', _filter => {
-      filter = _filter.toLowerCase();
+      filter = _filter;
       flush();
     });
 
