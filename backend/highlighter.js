@@ -2,7 +2,6 @@
  * @flow
  */
 
-import { inDoc } from "shared/util";
 import { isBrowser, target } from "shared/env";
 
 let overlay;
@@ -32,7 +31,7 @@ function init() {
 export function highLight(instance) {
   if(!instance) return;
 
-  const rect = getInstanceRect();
+  const rect = getInstanceRect(instance);
 
   if(!isBrowser) {
     //TODO:
@@ -64,7 +63,29 @@ export function unHighLight() {
   }
 }
 
-export function getInstanceRect() {}
+export function getInstanceRect(instance) {
+  if(!isBrowser) return; //TODO
+
+  const instanceRect = {};
+  const rootInstance = instance.$rootParent;
+
+  const canvas = document.getElementsByTagName('canvas');
+  const canvasRect = canvas[0].getBoundingClientRect()
+
+  //TODO: anchor transform
+  const { x, y, width, height } = instance;
+
+  const widthRatio = canvasRect.width / rootInstance.width;
+  const heightRatio = canvasRect.height / rootInstance.height;
+  const relativeY = rootInstance.height - y;
+
+  instanceRect.width = width * widthRatio;
+  instanceRect.height = height * heightRatio;
+  instanceRect.left = x * widthRatio + canvasRect.left;
+  instanceRect.top = relativeY * heightRatio + canvasRect.top;
+  console.log(canvasRect, widthRatio, heightRatio, instanceRect);
+  return instanceRect;
+}
 
 function showOverlay({ width = 0, height = 0, top = 0, left = 0 }, content = []) {
   if(!isBrowser) return;

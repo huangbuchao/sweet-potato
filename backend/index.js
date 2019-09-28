@@ -80,6 +80,7 @@ function connect(cc) {
 
     bridge.on('enter-instance', id => {
       const instance = findInstance(id);
+      console.log(instanceMap, id, instance);
       if(instance) {
         highLight(instance);
       }
@@ -115,7 +116,7 @@ function connect(cc) {
 }
 
 export function findInstance(id) {
-  return instanceMap(id);
+  return instanceMap.get(id);
 }
 
 function scan() {
@@ -124,6 +125,12 @@ function scan() {
   const canvas = scene && scene.children;
 
   rootInstanceId = canvas && canvas[0].__instanceId;
+  console.log('canvas: ', canvas[0]);
+  walk(canvas[0], node => {
+    if(!node.$rootParent) {
+      node.$rootParent = canvas[0];
+    }
+  });
 
   canvas && rootInstances.push(...canvas);
 
@@ -136,8 +143,8 @@ function walk(node, fnc) {
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
       fnc && fnc(child);
-      if(node.children.length !== 0) {
-        walk(node, fnc);
+      if(child.children.length !== 0) {
+        walk(child, fnc);
       }
     }
   }
