@@ -73,7 +73,8 @@ export function getInstanceRect(instance) {
   const canvasRect = canvas[0].getBoundingClientRect()
 
   //TODO: anchor transform
-  const { x, y, width, height } = instance;
+  const { width, height } = instance;
+  const { x, y } = instance.convertToWorldSpaceAR({ x: instance.x, y: instance.y });
 
   const widthRatio = canvasRect.width / rootInstance.width;
   const heightRatio = canvasRect.height / rootInstance.height;

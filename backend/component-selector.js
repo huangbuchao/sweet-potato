@@ -40,7 +40,7 @@ export default class ComponentSelector {
   }
 
   elementMouseOver(e) {
-    this.cancelEvent();
+    this.cancelEvent(e);
 
     const el = e.target;
 
