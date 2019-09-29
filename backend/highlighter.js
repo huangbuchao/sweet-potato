@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { isBrowser, target } from "shared/env";
+import { isBrowser } from "shared/env";
 
 let overlay;
 let overlayContent;
@@ -34,7 +34,7 @@ export function highLight(instance) {
   const rect = getInstanceRect(instance);
 
   if(!isBrowser) {
-    //TODO:
+    //TODO: electron env
     return;
   }
 
@@ -70,11 +70,10 @@ export function getInstanceRect(instance) {
   const canvas = document.getElementsByTagName('canvas');
   const canvasRect = canvas[0].getBoundingClientRect()
 
-  //TODO: anchor transform
+  //TODO: anchor transform.
+  //TODO: rotation solution.
   const { width, height } = instance;
   const { x, y } = instance.parent.convertToWorldSpaceAR({ x: instance.x, y: instance.y });
-  console.log(instance.name);
-  console.log(x, y)
 
   const widthRatio = canvasRect.width / rootInstance.width;
   const heightRatio = canvasRect.height / rootInstance.height;
@@ -84,7 +83,7 @@ export function getInstanceRect(instance) {
   instanceRect.height = height * heightRatio;
   instanceRect.left = x * widthRatio + canvasRect.left - instanceRect.width / 2;
   instanceRect.top = relativeY * heightRatio + canvasRect.top - instanceRect.height / 2;
-  // console.log(canvasRect, widthRatio, heightRatio, instanceRect);
+
   return instanceRect;
 }
 

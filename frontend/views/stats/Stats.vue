@@ -1,5 +1,5 @@
 <template>
-    <button class="test">Stats</button>
+    <button class="test">PerformenceStats</button>
 </template>
 
 <style lang="stylus" scoped>
