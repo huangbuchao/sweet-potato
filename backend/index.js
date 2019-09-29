@@ -80,7 +80,6 @@ function connect(cc) {
 
     bridge.on('enter-instance', id => {
       const instance = findInstance(id);
-      console.log(instanceMap, id, instance);
       if(instance) {
         highLight(instance);
       }
@@ -125,16 +124,21 @@ function scan() {
   const canvas = scene && scene.children;
 
   rootInstanceId = canvas && canvas[0].__instanceId;
-  console.log('canvas: ', canvas[0]);
-  walk(canvas[0], node => {
-    if(!node.$rootParent) {
-      node.$rootParent = canvas[0];
-    }
-  });
 
-  canvas && rootInstances.push(...canvas);
+  if(canvas) {
+    canvas[0].$rootParent = canvas[0];
 
-  flush();
+    walk(canvas[0], node => {
+      if(!node.$rootParent) {
+        node.$rootParent = canvas[0];
+      }
+    });
+
+    canvas && rootInstances.push(...canvas);
+    flush();
+  }else{
+    toast('detected cc.director is not already, next please click refresh!', 'warn');
+  }
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -169,9 +173,9 @@ function flush() {
       isBrowser ? `, took ${window.performance.now() - start}ms.` : '.'}`
     );
   }
-  console.log('instanceMap: ', instanceMap)
-  console.log('captureIds: ', captureIds)
-  console.log('payload: ', payload)
+  // console.log('instanceMap: ', instanceMap)
+  // console.log('captureIds: ', captureIds)
+  // console.log('payload: ', payload)
   bridge.send('flush', payload)
 }
 

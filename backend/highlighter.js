@@ -82,9 +82,9 @@ export function getInstanceRect(instance) {
 
   instanceRect.width = width * widthRatio;
   instanceRect.height = height * heightRatio;
-  instanceRect.left = x * widthRatio + canvasRect.left;
-  instanceRect.top = relativeY * heightRatio + canvasRect.top;
-  console.log(canvasRect, widthRatio, heightRatio, instanceRect);
+  instanceRect.left = x * widthRatio + canvasRect.left - instanceRect.width / 2;
+  instanceRect.top = relativeY * heightRatio + canvasRect.top - instanceRect.height / 2;
+  // console.log(canvasRect, widthRatio, heightRatio, instanceRect);
   return instanceRect;
 }
 
