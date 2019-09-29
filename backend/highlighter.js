@@ -21,7 +21,7 @@ function init() {
   overlayContent = document.createElement("div");
   overlayContent.style.backgroundColor = "rgba(104, 182, 255, 0.9)";
   overlayContent.style.fontFamily = "monospace";
-  overlayContent.style.fontSize = "11px";
+  overlayContent.style.fontSize = "80%";
   overlayContent.style.padding = "2px 3px";
   overlayContent.style.borderRadius = "3px";
   overlayContent.style.color = "white";
@@ -46,11 +46,9 @@ export function highLight(instance) {
     if (name) {
       const pre = document.createElement('span')
       pre.style.opacity = '0.6'
-      pre.innerText = '<'
       const text = document.createTextNode(name)
       const post = document.createElement('span')
       post.style.opacity = '0.6'
-      post.innerText = '>'
       content.push(pre, text, post)
     }
     showOverlay(rect, content);
@@ -74,7 +72,9 @@ export function getInstanceRect(instance) {
 
   //TODO: anchor transform
   const { width, height } = instance;
-  const { x, y } = instance.convertToWorldSpaceAR({ x: instance.x, y: instance.y });
+  const { x, y } = instance.parent.convertToWorldSpaceAR({ x: instance.x, y: instance.y });
+  console.log(instance.name);
+  console.log(x, y)
 
   const widthRatio = canvasRect.width / rootInstance.width;
   const heightRatio = canvasRect.height / rootInstance.height;
