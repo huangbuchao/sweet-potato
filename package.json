@@ -44,6 +44,7 @@
     "vuex": "^3.1.0",
     "vue-virtual-scroller": "^1.0.0-rc.2",
     "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
     "lodash.groupby": "^4.6.0"
   },
   "devDependencies": {
