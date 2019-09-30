@@ -68,7 +68,6 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import {
-  getComponentDisplayName,
   scrollIntoView,
   UNDEFINED
 } from "shared/util";
@@ -110,10 +109,7 @@ export default {
     },
 
     displayName() {
-      return getComponentDisplayName(
-        this.instance.name,
-        this.$shared.componentNameStyle
-      );
+      return this.instance.name;
     },
 
     componentHasKey() {
@@ -173,7 +169,7 @@ export default {
 
     select() {
       this.inspectInstance(this.instance);
-      bridge.send("select-instance", this.instance.id);
+      //bridge.send("select-instance", this.instance.id);
     },
 
     scrollToInstance() {
@@ -190,191 +186,135 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.instance {
-  font-family: dejavu sans mono, monospace;
+.instance
+  font-family dejavu sans mono, monospace
+  .platform-mac &
+    font-family Menlo, monospace
+  .platform-windows &
+    font-family Consolas, Lucida Console, Courier New, monospace
+  &.inactive
+    opacity .5
 
-  .platform-mac & {
-    font-family: Menlo, monospace;
-  }
+.self
+  cursor pointer
+  position relative
+  overflow hidden
+  z-index 2
+  border-radius 3px
+  font-size 14px
+  line-height 22px
+  height 22px
+  white-space nowrap
+  display flex
+  align-items center
+  padding-right 6px
+  transition font-size .15s, height .15s
 
-  .platform-windows & {
-    font-family: Consolas, Lucida Console, Courier New, monospace;
-  }
+  &:hidden
+    display none
 
-  &.inactive {
-    opacity: 0.5;
-  }
-}
+  .high-density &
+    font-size 12px
+    height 15px
 
-.self {
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  z-index: 2;
-  border-radius: 3px;
-  font-size: 14px;
-  line-height: 22px;
-  height: 22px;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  padding-right: 6px;
-  transition: font-size 0.15s, height 0.15s;
+.children
+  position relative
+  z-index 1
 
-  &:hidden {
-    display: none;
-  }
+.content
+  position relative
+  padding-left 22px
 
-  .high-density & {
-    font-size: 12px;
-    height: 15px;
-  }
-}
+.info
+  color #fff
+  font-size 10px
+  padding 3px 5px 2px
+  display inline-block
+  line-height 10px
+  border-radius 3px
+  position relative
+  top -1px
+  .high-density &
+    padding 1px 4px 0
+    top 0
+  &.console
+    color #fff
+    background-color transparent
+    top 0
+  &.router-view
+    background-color #ff8344
+  &.fragment
+    background-color #b3cbf7
+  &.inactive
+    background-color #aaa
+  &.functional
+    background-color rgba($md-black, .06)
+    color: rgba($md-black, .5)
+    .vue-ui-dark-mode &
+      background-color rgba($md-white, .06)
+      color rgba($md-white, .5)
+  &:not(.console)
+    margin-left 6px
 
-.children {
-  position: relative;
-  z-index: 1;
-}
+.arrow-wrapper
+  position absolute
+  display inline-block
+  width 16px
+  height 16px
+  top 1px
+  left 4px
 
-.content {
-  position: relative;
-  padding-left: 22px;
-}
+.arrow
+  position absolute
+  top 5px
+  left 4px
+  transition transform .1s ease
+  &.rotated
+    transform rotate(90deg)
 
-.info {
-  color: #fff;
-  font-size: 10px;
-  padding: 3px 5px 2px;
-  display: inline-block;
-  line-height: 10px;
-  border-radius: 3px;
-  position: relative;
-  top: -1px;
+.angle-bracket
+  color $darkGrey
 
-  .high-density & {
-    padding: 1px 4px 0;
-    top: 0;
-  }
+.item-name
+  color $component-color
+  margin 0 1px
 
-  &.console {
-    color: #fff;
-    background-color: transparent;
-    top: 0;
-  }
+.attr
+  opacity .5
+  font-size 12px
+  .high-density &
+    font-size 10px
 
-  &.router-view {
-    background-color: #ff8344;
-  }
+.attr-title
+  color purple
+  .vue-ui-dark-mode &
+    color lighten(purple, 60%)
 
-  &.fragment {
-    background-color: #b3cbf7;
-  }
+.spacer
+  flex auto 1 1
 
-  &.inactive {
-    background-color: #aaa;
-  }
+.icon-button
+  width 16px
+  height 16px
 
-  &.functional {
-    background-color: rgba($md-black, 0.06);
-    color: rgba($md-black, 0.5);
+  .self:not(:hover) &
+    visibility hidden
 
-    .vue-ui-dark-mode & {
-      background-color: rgba($md-white, 0.06);
-      color: rgba($md-white, 0.5);
-    }
-  }
+  .self.selected & >>> svg
+    fill $white
 
-  &:not(.console) {
-    margin-left: 6px;
-  }
-}
+.self:not(.selected)
+  .info
+    &.console
+      color lighten(black, 80%)
+      .vue-ui-dark-mode &
+        color darken(white, 70%)
 
-.arrow-wrapper {
-  position: absolute;
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  top: 1px;
-  left: 4px;
-}
-
-.arrow {
-  position: absolute;
-  top: 5px;
-  left: 4px;
-  transition: transform 0.1s ease;
-
-  &.rotated {
-    transform: rotate(90deg);
-  }
-}
-
-.angle-bracket {
-  color: $darkGrey;
-}
-
-.item-name {
-  color: $component-color;
-  margin: 0 1px;
-}
-
-.attr {
-  opacity: 0.5;
-  font-size: 12px;
-
-  .high-density & {
-    font-size: 10px;
-  }
-}
-
-.attr-title {
-  color: purple;
-
-  .vue-ui-dark-mode & {
-    color: lighten(purple, 60%);
-  }
-}
-
-.spacer {
-  flex: auto 1 1;
-}
-
-.icon-button {
-  width: 16px;
-  height: 16px;
-
-  .self:not(:hover) & {
-    visibility: hidden;
-  }
-
-  .self.selected & >>> svg {
-    fill: $white;
-  }
-}
-
-.self:not(.selected) {
-  .info {
-    &.console {
-      color: lighten(black, 80%);
-
-      .vue-ui-dark-mode & {
-        color: darken(white, 70%);
-      }
-    }
-  }
-}
-
-.self.selected {
-  .attr {
-    opacity: 1;
-  }
-
-  .attr-title {
-    color: lighten($purple, 70%);
-  }
-
-  .info.functional {
-    color: $md-white;
-  }
-}
+.self.selected
+  .attr
+    opacity 1
+  .attr-title
+    color lighten($purple, 70%)
+  .info.functional
+    color $md-white
 </style>

@@ -5,12 +5,15 @@
 import Vue from "vue";
 import { init as initStorage } from "shared/storage";
 import App from "./App.vue";
-import './plugins';
-import * as filters from './filters';
-import { createStore } from './store';
-import router from './router';
-import SharedData, { init as initSharedData, destroy as destroySharedData } from 'shared/shared-data'
-import { parse } from 'shared/util'
+import "./plugins";
+import * as filters from "./filters";
+import { createStore } from "./store";
+import router from "./router";
+import SharedData, {
+  init as initSharedData,
+  destroy as destroySharedData
+} from "shared/shared-data";
+import { parse } from "shared/util";
 
 for (const key in filters) {
   Vue.filter(key, filters[key]);
@@ -50,10 +53,10 @@ function initApp(shell) {
   shell.connect(bridge => {
     window.bridge = bridge;
 
-    if(Vue.prototype.hasOwnProperty('$shared')) {
+    if (Vue.prototype.hasOwnProperty("$shared")) {
       destroySharedData();
-    }else{
-      Object.defineProperty(Vue.prototype, '$shared', {
+    } else {
+      Object.defineProperty(Vue.prototype, "$shared", {
         get: () => SharedData
       });
     }
@@ -62,19 +65,31 @@ function initApp(shell) {
       bridge,
       Vue,
       persist: true
-    })
+    });
 
     const store = createStore();
 
-    bridge.send('log-detected-cocos');
+    bridge.send("log-detected-cocos");
 
     bridge.on("ready", version => {
-      store.commit('SHOW_MESSAGE', 'Detected Cocos ' + version + '.');
+      store.commit("SHOW_MESSAGE", "Detected Cocos " + version + ".");
     });
 
-    bridge.on('flush', payload => {
-      store.commit('components/FLUSH', parse(payload))
-    })
+    bridge.on("flush", payload => {
+      store.commit("components/FLUSH", parse(payload));
+    });
+
+    bridge.on("inspect-instance", id => {
+      bridge.send("select-instance", id);
+      router.push({ name: "components" });
+      const instance = store.state.components.instancesMap[id];
+      instance &&
+        store.dispatch("components/toggleInstance", {
+          instance,
+          expanded: true,
+          parent: true
+        });
+    });
 
     app = new Vue({
       extends: App,

@@ -196,13 +196,15 @@ function findQualifiedChildren(instance) {
 }
 
 function isQualified(instance) {
-  let reg = /^\/(\w+)\/$/;
+  let reg = /^\/([\s\S]+)\/$/;
   const name = instance.name;
   if(reg.test(filter)) {
-    return new RegExp(name.match(reg)[1]).test(name);
+    let match = filter.match(reg)[1];
+    return new RegExp(match).test(name);
   }else{
-    console.log(name, filter);
-    return name.indexOf(filter) > -1;
+    let lowerN = name.toLowerCase();
+    let lowerF = filter.toLowerCase();
+    return lowerN.indexOf(lowerF) > -1;
   }
 }
 
