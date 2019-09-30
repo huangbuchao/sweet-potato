@@ -67,7 +67,8 @@ export default class ComponentSelector {
 
   canvasMove(e) {
     const el = e.target;
-    console.log("move: ", e, el.getBoundingClientRect());
+
+    this.canvasRect = el.getBoundingClientRect();
     this.selectedInstance = this.probeInstance(e);
 
     unHighLight();
@@ -91,7 +92,59 @@ export default class ComponentSelector {
     this.canvasMove = throttle(this.canvasMove.bind(this), 30);
   }
 
-  probeInstance() {
-    //
+  probeInstance(e) {
+    const { left, top, height } = this.canvasRect;
+    const p = this.convertVerticalCoordinate(
+      height,
+      e.clientX - left,
+      e.clientY - top
+    );
+
+    const qualifiedNodes = this.filterQualifiedNodes(p);
+    console.log(qualifiedNodes);
+    if (qualifiedNodes.length === 0) return null;
+
+    const sortNodes = qualifiedNodes.sort(
+      (a, b) => b.__instanceId - a.__instanceId
+    );
+    return sortNodes[0];
+  }
+
+  //TODO: anchor point;
+  filterQualifiedNodes(p) {
+    const values = this.instanceMap.values();
+    const nodes = Array.from(values);
+    const ratio = this.getDynamicRatio(nodes[0]);
+    console.log(ratio);
+    return nodes.filter(node => {
+      const { x, y, width, height } = node;
+      const worldPosition = node.parent.convertToWorldSpaceAR({ x, y });
+      const rect = { x: worldPosition.x, y: worldPosition.y, width, height };
+      return this.isContained(p, rect, ratio);
+    });
+  }
+
+  getDynamicRatio(instance) {
+    const rootInstance = instance.$rootParent;
+    const ratioW = this.canvasRect.width / rootInstance.width;
+    const ratioH = this.canvasRect.height / rootInstance.height;
+    return { ratioW, ratioH };
+  }
+
+  isContained(p, { x, y, width, height }, { ratioW, ratioH }) {
+    const minX = x - width / 2;
+    const maxX = x + width / 2;
+    const minY = y - height / 2;
+    const maxY = y + height / 2;
+    const ratioX = p.x / ratioW;
+    const ratioY = p.y / ratioH;
+    return minX <= ratioX && maxX >= ratioX && minY <= ratioY && maxY >= ratioY;
+  }
+
+  convertVerticalCoordinate(offsetVertical, x, y) {
+    return {
+      x,
+      y: offsetVertical - y
+    };
   }
 }
