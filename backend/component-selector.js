@@ -101,7 +101,7 @@ export default class ComponentSelector {
     );
 
     const qualifiedNodes = this.filterQualifiedNodes(p);
-    console.log(qualifiedNodes);
+
     if (qualifiedNodes.length === 0) return null;
 
     const sortNodes = qualifiedNodes.sort(
@@ -115,7 +115,7 @@ export default class ComponentSelector {
     const values = this.instanceMap.values();
     const nodes = Array.from(values);
     const ratio = this.getDynamicRatio(nodes[0]);
-    console.log(ratio);
+
     return nodes.filter(node => {
       const { x, y, width, height } = node;
       const worldPosition = node.parent.convertToWorldSpaceAR({ x, y });

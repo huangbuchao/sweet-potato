@@ -1,5 +1,5 @@
 <template>
-    <button class="test">TimeTravel</button>
+    <button class="test">Travel</button>
 </template>
 
 <style lang="stylus" scoped>

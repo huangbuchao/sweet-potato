@@ -97,7 +97,8 @@ export default {
     },
 
     filterInstances (e) {
-      bridge.send('filter-instances', classify(e.target.value))
+      console.log(e.target.value);
+      bridge.send('filter-instances', e.target.value);
     },
 
     setSelecting(value) {

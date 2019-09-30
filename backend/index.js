@@ -71,7 +71,7 @@ function connect(cc) {
       }
     });
 
-    bridge.on('filter-instance', _filter => {
+    bridge.on('filter-instances', _filter => {
       filter = _filter;
       flush();
     });
@@ -173,9 +173,9 @@ function flush() {
       isBrowser ? `, took ${window.performance.now() - start}ms.` : '.'}`
     );
   }
-  // console.log('instanceMap: ', instanceMap)
-  // console.log('captureIds: ', captureIds)
-  // console.log('payload: ', payload)
+  console.log('instanceMap: ', instanceMap)
+  console.log('captureIds: ', captureIds)
+  console.log('payload: ', payload)
   bridge.send('flush', payload)
 }
 
@@ -184,9 +184,11 @@ function getInstanceDetails() {
 }
 
 function findQualifiedInstances(instances) {
+  if(instances.length === 0) return [];
+
   return !filter ?
     instances.map(capture) :
-    Array.prototype.concat.call([], instances.map(findQualifiedChildren));
+    flatten(Array.prototype.concat.call([], instances.map(findQualifiedChildren)));
 }
 
 function findQualifiedChildren(instance) {
@@ -196,9 +198,10 @@ function findQualifiedChildren(instance) {
 function isQualified(instance) {
   let reg = /^\/(\w+)\/$/;
   const name = instance.name;
-  if(filter.test(reg)) {
-    return name.test(new RegExp(name.match(reg)[1]));
+  if(reg.test(filter)) {
+    return new RegExp(name.match(reg)[1]).test(name);
   }else{
+    console.log(name, filter);
     return name.indexOf(filter) > -1;
   }
 }
