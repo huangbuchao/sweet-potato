@@ -57,7 +57,7 @@ export default class ComponentSelector {
     this.cancelEvent(e);
 
     if (this.selectedInstance) {
-      this.bridge.send("inspect-instance", this.selectedInstance.__instanceId);
+      this.bridge.send("inspect-instance", this.selectedInstance.__POTATO_DEVTOOLS_UID__);
     } else {
       this.bridge.send("stop-component-selector");
     }

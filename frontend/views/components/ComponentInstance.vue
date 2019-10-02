@@ -121,7 +121,7 @@ export default {
     scrollToExpanded: {
       handler(value, oldValue) {
         if (value !== oldValue && value === this.instance.id) {
-          this.scrollToExpanded();
+          this.scrollIntoView();
         }
       },
       immediate: true

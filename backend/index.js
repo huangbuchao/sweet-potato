@@ -57,6 +57,7 @@ function connect(cc) {
     bridge.on('select-instance', id => {
       currentInspectedId = id;
       const instance = findInstance(id);
+      console.log(currentInspectedId, instance);
       if(instance) {
         flush();
         bridge.send('instance-selected');
@@ -202,9 +203,9 @@ function isQualified(instance) {
     let match = filter.match(reg)[1];
     return new RegExp(match).test(name);
   }else{
-    let lowerN = name.toLowerCase();
-    let lowerF = filter.toLowerCase();
-    return lowerN.indexOf(lowerF) > -1;
+    let lowerName = name.toLowerCase();
+    let lowerFilter = filter.toLowerCase();
+    return lowerName.indexOf(lowerFilter) > -1;
   }
 }
 
