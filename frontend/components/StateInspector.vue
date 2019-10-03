@@ -90,7 +90,6 @@ export default {
 
   computed: {
     dataTypes () {
-		console.log(this.state);
       return Object.keys(this.state).sort((a, b) => {
         return (
           (keyOrder[a] || (a.charCodeAt(0) + 999)) -

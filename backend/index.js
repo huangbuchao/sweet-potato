@@ -362,16 +362,16 @@ export function toast(message, type = "normal") {
 
 export function inspectInstance() {}
 
-export function scrollToInstance(instance) {}
+export function scrollToInstance() {}
 
-function setInstanceData(args) {}
+function setInstanceData() {}
 
 function initRightClick() {
   if (!isBrowser) return;
 
   document.addEventListener("contextmenu", event => {
     const el = event.target;
-    console.log(el);
+    console.log('right click capture dom: ', el);
     // if (el) {
     //   Search for parent that "is" a component instance
     //   const instance = findRelatedComponent(el)

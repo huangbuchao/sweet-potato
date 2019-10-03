@@ -388,7 +388,6 @@ export default {
           ...inherit
         }))
       } else if (typeof value === 'object') {
-          console.log(this.valueType, value);
         value = Object.keys(value).map(key => ({
           key,
           value: value[key],
