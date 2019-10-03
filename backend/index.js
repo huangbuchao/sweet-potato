@@ -5,13 +5,13 @@
 import { target, isBrowser } from "shared/env";
 import { highLight, unHighLight, getInstanceRect } from "./highlighter";
 import ComponentSelector from "./component-selector";
-import { stringify, parse, set, has, getComponentName, flatten } from "../shared/util";
+import { stringify, parse, set, has, flatten } from "../shared/util";
 import { init as initStorage } from "../shared/storage";
 import SharedData, { init as initSharedData } from "../shared/shared-data";
-import { installToast } from './toast';
+import { installToast } from "./toast";
 
 let bridge;
-let filter = '';
+let filter = "";
 let rootInstanceId;
 let captureCount = 0;
 let currentInspectedId;
@@ -21,6 +21,27 @@ const captureIds = new Map(); //dedupe
 const hook = target.__POTATO_DEVTOOLS_GLOBAL_HOOK__;
 
 export const instanceMap = (target.__POTATO_DEVTOOLS_INSTANCE_MAP__ = new Map());
+
+const instanceProperties = [
+  "uuid",
+  "active",
+  "x",
+  "y",
+  "anchorX",
+  "anchorY",
+  "rotationX",
+  "rotationY",
+  "scaleX",
+  "scaleY",
+  "skewX",
+  "skewY",
+  "opacity",
+  "width",
+  "height",
+  "color",
+  "zIndex",
+  "childrenCount"
+];
 
 export function initBackend(_bridge) {
   bridge = _bridge;
@@ -32,7 +53,6 @@ export function initBackend(_bridge) {
 
 function connect(cc) {
   initStorage().then(() => {
-
     // initSharedData({
     //   bridge,
     // });
@@ -54,43 +74,43 @@ function connect(cc) {
       }
     });
 
-    bridge.on('select-instance', id => {
+    bridge.on("select-instance", id => {
       currentInspectedId = id;
       const instance = findInstance(id);
-      console.log(currentInspectedId, instance);
-      if(instance) {
+
+      if (instance) {
         flush();
-        bridge.send('instance-selected');
+        bridge.send("instance-selected");
       }
     });
 
-    bridge.on('scroll-to-instance', id => {
+    bridge.on("scroll-to-instance", id => {
       const instance = findInstance(id);
-      if(instance) {
+      if (instance) {
         scrollToInstance(instance);
         highLight(instance);
       }
     });
 
-    bridge.on('filter-instances', _filter => {
+    bridge.on("filter-instances", _filter => {
       filter = _filter;
       flush();
     });
 
-    bridge.on('refresh', scan);
+    bridge.on("refresh", scan);
 
-    bridge.on('enter-instance', id => {
+    bridge.on("enter-instance", id => {
       const instance = findInstance(id);
-      if(instance) {
+      if (instance) {
         highLight(instance);
       }
     });
 
-    bridge.on('leave-instance', unHighLight);
+    bridge.on("leave-instance", unHighLight);
 
     new ComponentSelector(bridge, instanceMap);
 
-    bridge.on('set-instance-data', args => {
+    bridge.on("set-instance-data", args => {
       setInstanceData(args);
       flush();
     });
@@ -106,6 +126,7 @@ function connect(cc) {
         "background:#41b883 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff",
         "background:transparent"
       );
+      console.log('view detail: https://github.com/huangbuchao/sweet-potato');
     });
 
     //sometime cc.director not already.
@@ -126,29 +147,32 @@ function scan() {
 
   rootInstanceId = canvas && canvas[0].__instanceId;
 
-  if(canvas) {
+  if (canvas) {
     canvas[0].$rootParent = canvas[0];
 
     walk(canvas[0], node => {
-      if(!node.$rootParent) {
+      if (!node.$rootParent) {
         node.$rootParent = canvas[0];
       }
     });
 
     canvas && rootInstances.push(...canvas);
     flush();
-  }else{
-    toast('detected cc.director is not already, next please click refresh!', 'warn');
+  } else {
+    toast(
+      "detected cc.director is not already, next please click refresh!",
+      "warn"
+    );
   }
 }
 
 // eslint-disable-next-line no-unused-vars
 function walk(node, fnc) {
-  if(node.children) {
+  if (node.children) {
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
       fnc && fnc(child);
-      if(child.children.length !== 0) {
+      if (child.children.length !== 0) {
         walk(child, fnc);
       }
     }
@@ -159,50 +183,125 @@ function flush() {
   let start;
   captureIds.clear();
 
-  if(process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     captureCount = 0;
     start = isBrowser ? window.performance.now() : 0;
   }
 
   const payload = stringify({
-    inspectInstance: getInstanceDetails(currentInspectedId),
+    inspectedInstance: getInstanceDetails(currentInspectedId),
     instances: findQualifiedInstances(rootInstances)
   });
 
-  if(process.env.NODE_ENV !== 'production') {
-    console.log(`[flush]: serialized ${captureCount} instances${
-      isBrowser ? `, took ${window.performance.now() - start}ms.` : '.'}`
+  if (process.env.NODE_ENV !== "production") {
+    console.log(
+      `[flush]: serialized ${captureCount} instances${
+        isBrowser ? `, took ${window.performance.now() - start}ms.` : "."
+      }`
     );
   }
-  console.log('instanceMap: ', instanceMap)
-  console.log('captureIds: ', captureIds)
-  console.log('payload: ', payload)
-  bridge.send('flush', payload)
+  // console.log("instanceMap: ", instanceMap);
+  // console.log("captureIds: ", captureIds);
+  // console.log("payload: ", payload);
+  bridge.send("flush", payload);
 }
 
-function getInstanceDetails() {
+function getInstanceDetails(id) {
+  const instance = instanceMap.get(id);
+  if (!instance) {
+    return {};
+  }
 
+  const data = {
+    id,
+    name: instance.name,
+    state: getInstanceState(instance)
+  };
+
+  return data;
+}
+
+function getInstanceState(instance) {
+  return processProperties(instance).concat(
+    processComponents(instance),
+    processListeners(instance)
+  );
+}
+
+function processComponents(instance) {
+  const components = instance._components;
+  return components.map((component, index) => {
+    const name = component.name.match(/(?:\S+)<(\S+)>/)[1];
+    return {
+      type: 'components',
+      key: `component${index}`,
+      value: name,
+      editable: false
+    };
+  });
+}
+
+function processListeners(instance) {
+  const bubbles = instance._bubblingListeners;
+  const captures = instance._capturingListeners;
+  const listeners = {
+    bubblingListeners:
+      bubbles === null ? null : Object.keys(bubbles._callbackTable),
+    capturingListeners:
+      captures === null ? null : Object.keys(captures._callbackTable)
+  };
+
+  return Object.keys(listeners).map(key => {
+    let value = listeners[key];
+    return {
+      type: 'listeners',
+      key,
+      value,
+      editable: false
+    }
+  });
+}
+
+function processProperties(instance) {
+  return instanceProperties.map(property => {
+    const value = instance[property];
+    return {
+      type: 'properties',
+      key: property,
+      value: property !== "color" ? value: getColor(value),
+      editable: property !== "uuid" ? true : false
+    }
+  });
+}
+
+function getColor(obj) {
+  const { r, g, b, a } = obj;
+  return { r, g, b, a }
 }
 
 function findQualifiedInstances(instances) {
-  if(instances.length === 0) return [];
+  if (instances.length === 0) return [];
 
-  return !filter ?
-    instances.map(capture) :
-    flatten(Array.prototype.concat.call([], instances.map(findQualifiedChildren)));
+  return !filter
+    ? instances.map(capture)
+    : flatten(
+      Array.prototype.concat.call([], instances.map(findQualifiedChildren))
+    );
 }
 
 function findQualifiedChildren(instance) {
-  return isQualified(instance) ? capture(instance) : findQualifiedInstances(instance.children);
+  return isQualified(instance)
+    ? capture(instance)
+    : findQualifiedInstances(instance.children);
 }
 
 function isQualified(instance) {
   let reg = /^\/([\s\S]+)\/$/;
   const name = instance.name;
-  if(reg.test(filter)) {
+  if (reg.test(filter)) {
     let match = filter.match(reg)[1];
     return new RegExp(match).test(name);
-  }else{
+  } else {
     let lowerName = name.toLowerCase();
     let lowerFilter = filter.toLowerCase();
     return lowerName.indexOf(lowerFilter) > -1;
@@ -210,19 +309,19 @@ function isQualified(instance) {
 }
 
 function capture(instance, index, list) {
-  if(process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     captureCount++;
   }
 
   instance.__POTATO_DEVTOOLS_UID__ = getUniqueID(instance);
 
-  if(captureIds.has(instance.__POTATO_DEVTOOLS_UID__)) {
+  if (captureIds.has(instance.__POTATO_DEVTOOLS_UID__)) {
     return;
-  }else{
+  } else {
     captureIds.set(instance.__POTATO_DEVTOOLS_UID__, undefined);
   }
 
-  const name = instance.name ? instance.name : 'AnonymousNode';
+  const name = instance.name ? instance.name : "AnonymousNode";
 
   mark(instance);
 
@@ -231,15 +330,13 @@ function capture(instance, index, list) {
     id: instance.__POTATO_DEVTOOLS_UID__,
     name,
     inactive: !instance.active,
-    children: instance.children.
-      map(capture).
-      filter(Boolean)
+    children: instance.children.map(capture).filter(Boolean)
   };
 
-  if((!list || list.length > 1) && instance.active) {
+  if ((!list || list.length > 1) && instance.active) {
     const rect = getInstanceRect(instance);
     ret.top = rect ? rect.top : Infinity;
-  }else{
+  } else {
     ret.top = Infinity;
   }
 
@@ -251,29 +348,23 @@ function getUniqueID(instance) {
 }
 
 function mark(instance) {
-  if(!instanceMap.has(instance.__POTATO_DEVTOOLS_UID__)) {
+  if (!instanceMap.has(instance.__POTATO_DEVTOOLS_UID__)) {
     instanceMap.set(instance.__POTATO_DEVTOOLS_UID__, instance);
   }
 }
 
 export function getCustomInstanceDetails() {}
 
-export function toast(message, type = 'normal') {
+export function toast(message, type = "normal") {
   const fnc = target.__POTATO_DEVTOOLS_TOAST__;
   fnc && fnc(message, type);
 }
 
-export function inspectInstance() {
+export function inspectInstance() {}
 
-}
+export function scrollToInstance(instance) {}
 
-export function scrollToInstance(instance) {
-
-}
-
-function setInstanceData(args) {
-
-}
+function setInstanceData(args) {}
 
 function initRightClick() {
   if (!isBrowser) return;

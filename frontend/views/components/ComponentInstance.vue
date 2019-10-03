@@ -169,7 +169,7 @@ export default {
 
     select() {
       this.inspectInstance(this.instance);
-      //bridge.send("select-instance", this.instance.id);
+      bridge.send("select-instance", this.instance.id);
     },
 
     scrollToInstance() {

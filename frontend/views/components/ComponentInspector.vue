@@ -5,9 +5,9 @@
       slot="header"
     >
       <span class="title">
-        <span class="title-bracket">&lt;</span>
+        <span class="title-bracket">ˆ-ˆ</span>
         <span>{{ targetName }}</span>
-        <span class="title-bracket">&gt;</span>
+        <span class="title-bracket">ˆ-ˆ</span>
       </span>
       <div class="search">
         <VueIcon icon="search" />
@@ -48,9 +48,9 @@
 </template>
 
 <script>
-import ActionHeader from '../../components/ActionHeader';
-import StateInspector from '../../components/StateInspector';
-import ScrollPane from '../../components/ScrollPane';
+import ActionHeader from '../../components/ActionHeader.vue';
+import StateInspector from '../../components/StateInspector.vue';
+import ScrollPane from '../../components/ScrollPane.vue';
 import groupby from 'lodash.groupby';
 import { searchDeepInObject, sortByKey } from 'shared/util';
 
@@ -80,7 +80,7 @@ export default {
 
   computed: {
     hasTarget() {
-      return this.target.id !== null;
+      return this.target.id !== undefined;
     },
 
     targetName() {
@@ -88,9 +88,9 @@ export default {
     },
 
     filteredState() {
-      return groupby(sortByKey(this.target.state.filter(el => {
-        searchDeepInObject({ [el.key]: el.value }, this.filter);
-      })), 'type');
+      return groupby(this.target.state.filter(el => {
+        return searchDeepInObject({ [el.key]: el.value }, this.filter);
+      }), 'type');
     }
   }
 }
