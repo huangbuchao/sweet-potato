@@ -42,7 +42,7 @@ export function init(params) {
   vm = new Vue({
     data: internalSharedData
   });
-  console.log(vm);
+
   bridge.on('shared-data:set', ({ key, value }) => {
     setValue(key, value)
   })

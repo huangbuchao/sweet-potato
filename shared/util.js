@@ -501,6 +501,7 @@ export function set (object, path, value, cb = null) {
   while (sections.length > 1) {
     object = object[sections.shift()]
   }
+
   const field = sections[0]
   if (cb) {
     cb(object, field, value)
