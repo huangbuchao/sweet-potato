@@ -5,9 +5,9 @@
 import { target, isBrowser } from "shared/env";
 import { highLight, unHighLight, getInstanceRect } from "./highlighter";
 import ComponentSelector from "./component-selector";
-import { stringify, parse, set, has, flatten } from "../shared/util";
+import { stringify, parse, set, flatten } from "../shared/util";
 import { init as initStorage } from "../shared/storage";
-import SharedData, { init as initSharedData } from "../shared/shared-data";
+//import SharedData, { init as initSharedData } from "../shared/shared-data";
 import { installToast } from "./toast";
 
 let bridge;
@@ -22,27 +22,6 @@ const hook = target.__POTATO_DEVTOOLS_GLOBAL_HOOK__;
 
 export const instanceMap = (target.__POTATO_DEVTOOLS_INSTANCE_MAP__ = new Map());
 
-const instanceProperties = [
-  "uuid",
-  "active",
-  "x",
-  "y",
-  "anchorX",
-  "anchorY",
-  "rotationX",
-  "rotationY",
-  "scaleX",
-  "scaleY",
-  "skewX",
-  "skewY",
-  "opacity",
-  "width",
-  "height",
-  "color",
-  "zIndex",
-  "childrenCount"
-];
-
 export function initBackend(_bridge) {
   bridge = _bridge;
 
@@ -51,6 +30,7 @@ export function initBackend(_bridge) {
   initRightClick();
 }
 
+// eslint-disable-next-line no-unused-vars
 function connect(cc) {
   initStorage().then(() => {
     // initSharedData({
@@ -126,7 +106,7 @@ function connect(cc) {
         "background:#41b883 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff",
         "background:transparent"
       );
-      console.log('view detail: https://github.com/huangbuchao/sweet-potato');
+      console.log("view detail: https://github.com/huangbuchao/sweet-potato");
     });
 
     //sometime cc.director not already.
@@ -221,6 +201,27 @@ function getInstanceDetails(id) {
   return data;
 }
 
+const instanceProperties = [
+  "uuid",
+  "active",
+  "x",
+  "y",
+  "anchorX",
+  "anchorY",
+  "rotationX",
+  "rotationY",
+  "scaleX",
+  "scaleY",
+  "skewX",
+  "skewY",
+  "opacity",
+  "width",
+  "height",
+  "zIndex",
+  "childrenCount",
+  "color"
+];
+
 function getInstanceState(instance) {
   return processProperties(instance).concat(
     processComponents(instance),
@@ -233,7 +234,7 @@ function processComponents(instance) {
   return components.map((component, index) => {
     const name = component.name.match(/(?:\S+)<(\S+)>/)[1];
     return {
-      type: 'components',
+      type: "components",
       key: `component${index}`,
       value: name,
       editable: false
@@ -254,11 +255,11 @@ function processListeners(instance) {
   return Object.keys(listeners).map(key => {
     let value = listeners[key];
     return {
-      type: 'listeners',
+      type: "listeners",
       key,
       value,
       editable: false
-    }
+    };
   });
 }
 
@@ -266,17 +267,22 @@ function processProperties(instance) {
   return instanceProperties.map(property => {
     const value = instance[property];
     return {
-      type: 'properties',
+      type: "properties",
       key: property,
-      value: property !== "color" ? value: getColor(value),
-      editable: property !== "uuid" ? true : false
-    }
+      value: property !== "color" ? value : getColor(value),
+      editable:
+        property !== "uuid" &&
+        property !== "color" &&
+        property !== "childrenCount"
+          ? true
+          : false
+    };
   });
 }
 
 function getColor(obj) {
   const { r, g, b, a } = obj;
-  return { r, g, b, a }
+  return { r, g, b, a };
 }
 
 function findQualifiedInstances(instances) {
@@ -364,14 +370,24 @@ export function inspectInstance() {}
 
 export function scrollToInstance() {}
 
-function setInstanceData() {}
+function setInstanceData({ id, path, value }) {
+  const instance = instanceMap.get(id);
+  if (instance) {
+    try {
+      const parseValue = parse(value);
+      set(instance, path, parseValue);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
 
 function initRightClick() {
   if (!isBrowser) return;
 
   document.addEventListener("contextmenu", event => {
     const el = event.target;
-    console.log('right click capture dom: ', el);
+    console.log("right click capture dom: ", el);
     // if (el) {
     //   Search for parent that "is" a component instance
     //   const instance = findRelatedComponent(el)
