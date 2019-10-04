@@ -87,7 +87,8 @@ export default {
 
   computed: {
     ...mapState({
-      message: state => state.message
+      message: state => state.message,
+      view: state => state.view
     }),
 
     specialTokens() {
@@ -105,6 +106,16 @@ export default {
         });
       }
     }
+  },
+
+  mounted() {
+    this.mediaQuery = window.matchMedia("(min-width: 685px)");
+    this.switchView(this.mediaQuery);
+    this.mediaQuery.addListener(this.switchView);
+  },
+
+  destroyed() {
+    this.mediaQuery.removeListener(this.switchView);
   },
 
   methods: {

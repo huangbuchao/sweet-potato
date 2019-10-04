@@ -23,7 +23,7 @@ export function createStore() {
       SHOW_MESSAGE(state, message) {
         state.message = message;
       },
-      SHOW_VIEW(state, view) {
+      SWITCH_VIEW(state, view) {
         state.view = view;
       },
       RECEIVE_INSTANCE_DETAIL(state, instance) {

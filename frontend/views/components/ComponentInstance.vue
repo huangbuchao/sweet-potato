@@ -32,7 +32,8 @@
         <span class="item-name">{{displayName}}</span>
 
         <span v-if="componentActive" class="attr">
-          <span class="attr-title">active</span>=
+          <span class="attr-title">active</span>
+          =
           <span class="attr-value">{{!instance.inactive}}</span>
         </span>
 
