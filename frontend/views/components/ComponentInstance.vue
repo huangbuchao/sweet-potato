@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{
-			inactive: instance.inactive && !instance.parent.inactive,
+			inactive: instance.inactive,
 			selected
 		}"
     class="instance"
@@ -31,19 +31,13 @@
 
         <span class="item-name">{{displayName}}</span>
 
-        <span v-if="componentHasKey" class="attr">
-          <span class="attr-title">renderClassAmount</span>:
-          <span class="attr-value">{{instance.renderAmount}}</span>
+        <span v-if="componentActive" class="attr">
+          <span class="attr-title">active</span>=
+          <span class="attr-value">{{!instance.inactive}}</span>
         </span>
 
         <span class="angle-bracket"></span>
       </span>
-
-      <span
-        v-if="instance.consoleId"
-        v-tooltip="$t('ComponentInstance.consoleId.tooltip', { id: instance.consoleId })"
-        class="info console"
-      >= {{ instance.consoleId }}</span>
 
       <span class="spacer" />
 
@@ -112,8 +106,8 @@ export default {
       return this.instance.name;
     },
 
-    componentHasKey() {
-      return !!this.instance.renderKey;
+    componentActive() {
+      return !!this.instance.inactive;
     }
   },
 

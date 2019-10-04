@@ -186,10 +186,10 @@ export default {
 
     sendEdit(args) {
       if (this.isStateField) {
-        this.$store.dispatch("vuex/editState", {
-          path: this.path,
-          args
-        });
+        // this.$store.dispatch("vuex/editState", {
+        //   path: this.path,
+        //   args
+        // });
       } else {
         bridge.send("set-instance-data", {
           id: this.inspectedInstance.id,
