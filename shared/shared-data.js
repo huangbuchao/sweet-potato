@@ -7,7 +7,7 @@ import * as storage from "./storage";
 const internalSharedData = {
   timeFormat: "default",
   componentNameStyle: "class",
-  theme: "auto",
+  theme: "light",
   displayDensity: "auto",
   recordPref: false,
   logDetected: true

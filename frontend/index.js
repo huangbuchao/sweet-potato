@@ -91,8 +91,6 @@ function initApp(shell) {
         });
     });
 
-    document.body.classList.add('vue-ui-dark-mode')
-
     app = new Vue({
       extends: App,
       store,
@@ -104,7 +102,7 @@ function initApp(shell) {
             if (value === 'dark') {
               document.body.classList.add('vue-ui-dark-mode')
             } else {
-              //document.body.classList.remove('vue-ui-dark-mode')
+              document.body.classList.remove('vue-ui-dark-mode')
             }
           },
           immediate: true
