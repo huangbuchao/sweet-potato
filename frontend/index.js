@@ -91,10 +91,25 @@ function initApp(shell) {
         });
     });
 
+    document.body.classList.add('vue-ui-dark-mode')
+
     app = new Vue({
       extends: App,
       store,
-      router
+      router,
+
+      watch: {
+        '$shared.theme': {
+          handler (value) {
+            if (value === 'dark') {
+              document.body.classList.add('vue-ui-dark-mode')
+            } else {
+              //document.body.classList.remove('vue-ui-dark-mode')
+            }
+          },
+          immediate: true
+        }
+      }
     }).$mount("#app");
   });
 }

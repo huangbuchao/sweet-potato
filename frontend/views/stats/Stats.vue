@@ -1,8 +1,9 @@
 <template>
-    <button class="test">Stats</button>
+    <div class="test">Stats</div>
 </template>
 
 <style lang="stylus" scoped>
   .test
     font-size 50px
+    text-align center
 </style>

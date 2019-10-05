@@ -7,7 +7,6 @@ import Vuex from "vuex";
 import components from "../views/components/module.js";
 import events from "../views/events/module";
 import router from "../views/router/module";
-import setting from "../views/setting/module";
 import stats from "../views/stats/module";
 import stores from "../views/store/module";
 
@@ -34,7 +33,6 @@ export function createStore() {
       components,
       events,
       router,
-      setting,
       stats,
       stores
     }
@@ -44,9 +42,7 @@ export function createStore() {
     module.hot.accept(
       [
         "../views/components/module",
-        "../views/events/module",
         "../views/router/module",
-        "../views/setting/module",
         "../views/stats/module",
         "../views/store/module"
       ],
@@ -57,7 +53,6 @@ export function createStore() {
               components: require("../views/components/module").default,
               events: require("../views/events/module").default,
               router: require("../views/router/module").default,
-              setting: require("../views/setting/module").default,
               stats: require("../views/stats/module").default,
               stores: require("../views/store/module").default
             }

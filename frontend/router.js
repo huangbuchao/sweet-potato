@@ -6,12 +6,10 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import Components from "./views/components/ComponentTab.vue";
-import Events from "./views/events/Events.vue";
 import Stats from "./views/stats/Stats.vue";
 import Store from "./views/store/Store.vue";
 import Setting from "./views/setting/Setting.vue";
 import Router from "./views/router/Router.vue";
-import Routing from "./views/routing/Routing.vue";
 
 //in order to advoid NavigationDuplicated error message, rewrite VueRouter.prototype.push.
 const originalPush = VueRouter.prototype.push;
@@ -38,19 +36,9 @@ const routes = [
     component: Store
   },
   {
-    path: '/events',
-    name: 'events',
-    component: Events
-  },
-  {
     path: '/router',
     name: 'router',
     component: Router
-  },
-  {
-    path: '/routing',
-    name: 'routing',
-    component: Routing
   },
   {
     path: '/stats',
