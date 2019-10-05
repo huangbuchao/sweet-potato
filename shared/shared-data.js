@@ -19,13 +19,17 @@ const persisted = [
   'logDetected'
 ];
 
+let Watcher;
+// eslint-disable-next-line no-unused-vars
+let watcher;
 let Vue;
-let bridge;
 let vm;
+let bridge;
 let persist = false;
 
 export function init(params) {
   Vue = params.Vue;
+  Watcher = params.Watcher;
   bridge = params.bridge;
   persist = !!params.persist;
 
@@ -39,9 +43,15 @@ export function init(params) {
     }
   });
 
-  vm = new Vue({
-    data: internalSharedData
-  });
+  if(Vue) {
+    vm = new Vue({
+      data: internalSharedData
+    });
+  }
+
+  if(Watcher) {
+    watcher = new Watcher(internalSharedData);
+  }
 
   bridge.on('shared-data:set', ({ key, value }) => {
     setValue(key, value)
