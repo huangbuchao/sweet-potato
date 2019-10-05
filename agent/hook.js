@@ -85,10 +85,10 @@ export function installHook(target) {
   hook.once('init', cc => {
     hook.cc = cc;
     console.log(cc);
-    // CC.prototype.$inspect = function() {
-    //   const fn = target.__POTATO_DEVTOOLS_INSPECT__;
-    //   fn && fn(this);
-    // }
+    cc.$inspect = function() {
+      const fn = target.__POTATO_DEVTOOLS_INSPECT__;
+      fn && fn(this);
+    }
   });
 
   hook.once();
