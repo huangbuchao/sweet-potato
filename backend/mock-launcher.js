@@ -30,3 +30,13 @@ const inCC = !!target.cc;
   }
   window.__POTATO_DEVTOOLS_LAUNCHER__();
 })(window);
+
+window.__POTATO_DEVTOOLS_BOOTSTRAP__ = function() {
+  const defer = isBrowser ? target.requestAnimationFrame : target.setTimeout;
+  const boot = function() {
+    defer(() => {
+      !target.cc ? boot() : target.__POTATO_DEVTOOLS_GLOBAL_HOOK__.emit("init", target.cc);
+    });
+  }
+  boot();
+}
