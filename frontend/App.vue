@@ -142,7 +142,7 @@ export default {
 <style lang="stylus" src="./style/global.styl"></style>
 
 <style lang='stylus' scoped>
-.app {
+.app
   width: 100%;
   height: 100%;
   user-select: none;
@@ -150,17 +150,21 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-}
+  .vue-ui-dark-mode &
+    background-color $dark-background-color
+  .vue-ui-high-contrast &
+    background black
 
-.header {
+.header
   display: flex;
   align-items: center;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
   font-size: 14px;
   position: relative;
-}
+  .vue-ui-dark-mode &
+    border-bottom 1px solid $dark-border-color
 
-.message-container {
+.message-container
   height: 1em;
   cursor: default;
   display: none;
@@ -168,7 +172,6 @@ export default {
   @media (min-width: $wide - 300px) {
     display: block;
   }
-}
 
 .message {
   color: $active-color;
