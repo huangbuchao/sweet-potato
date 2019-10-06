@@ -14,6 +14,7 @@ import SharedData, {
   destroy as destroySharedData
 } from "shared/shared-data";
 import { parse } from "shared/util";
+import { isChrome, initEnv } from "shared/env";
 
 for (const key in filters) {
   Vue.filter(key, filters[key]);
@@ -90,6 +91,8 @@ function initApp(shell) {
           parent: true
         });
     });
+
+    initEnv(Vue);
 
     app = new Vue({
       extends: App,

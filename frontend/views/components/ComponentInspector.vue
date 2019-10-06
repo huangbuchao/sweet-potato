@@ -20,6 +20,15 @@
         v-if="loading"
         class="primary"
       />
+      <a
+        v-if="!$isChrome"
+        v-tooltip="'Inspect DOM'"
+        class="button inspect"
+        @click="inspectDOM"
+      >
+        <VueIcon icon="code" />
+        <span>Inspect Node</span>
+      </a>
     </action-header>
     <template slot="scroll">
       <section
@@ -91,6 +100,19 @@ export default {
       return groupby(this.target.state.filter(el => {
         return searchDeepInObject({ [el.key]: el.value }, this.filter);
       }), 'type');
+    }
+  },
+
+  methods: {
+    inspectDOM () {
+      if (!this.hasTarget) return
+      if (this.$isChrome) {
+        chrome.devtools.inspectedWindow.eval(
+          `inspect(window.__VUE_DEVTOOLS_INSTANCE_MAP__.get("${this.target.id}"))`
+        )
+      } else {
+        window.alert('Node inspection is not supported in this shell.')
+      }
     }
   }
 }

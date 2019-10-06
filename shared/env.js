@@ -18,7 +18,7 @@ export const keys = {
   esc: 'Esc'
 };
 
-export function intEnv(Vue) {
+export function initEnv(Vue) {
   if(Vue.prototype.hasOwnProperty('$isChrome')) return;
 
   Object.defineProperties(Vue.prototype, {
