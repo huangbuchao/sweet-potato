@@ -20,6 +20,32 @@ for (const key in filters) {
   Vue.filter(key, filters[key]);
 }
 
+let panelShown = !isChrome
+let pendingAction = null
+
+const chromeTheme = isChrome ? chrome.devtools.panels.themeName : undefined
+//const isBeta = process.env.RELEASE_CHANNEL === 'beta'
+
+if (isChrome) {
+  Vue.config.errorHandler = (e, vm) => {
+    bridge.send('ERROR', {
+      message: e.message,
+      stack: e.stack,
+      component: vm.$options.name || vm.$options._componentTag || 'anonymous'
+    })
+  }
+
+  chrome.runtime.onMessage.addListener(request => {
+    if (request === 'vue-panel-shown') {
+      onPanelShown()
+    } else if (request === 'vue-panel-hidden') {
+      onPanelHidden()
+    } else if (request === 'vue-get-context-menu-target') {
+      getContextMenuInstance()
+    }
+  })
+}
+
 Vue.options.renderError = (h, e) => {
   return h(
     "pre",
@@ -80,17 +106,18 @@ function initApp(shell) {
       store.commit("components/FLUSH", parse(payload));
     });
 
-    bridge.on("inspect-instance", id => {
-      bridge.send("select-instance", id);
-      router.push({ name: "components" });
-      const instance = store.state.components.instancesMap[id];
-      instance &&
-        store.dispatch("components/toggleInstance", {
+    bridge.on('inspect-instance', id => {
+      ensurePaneShown(() => {
+        bridge.send('select-instance', id)
+        router.push({ name: 'components' })
+        const instance = store.state.components.instancesMap[id]
+        instance && store.dispatch('components/toggleInstance', {
           instance,
           expanded: true,
           parent: true
-        });
-    });
+        })
+      })
+    })
 
     initEnv(Vue);
 
@@ -102,7 +129,7 @@ function initApp(shell) {
       watch: {
         '$shared.theme': {
           handler (value) {
-            if (value === 'dark') {
+            if (value === 'dark' || chromeTheme === 'drak') {
               document.body.classList.add('vue-ui-dark-mode')
             } else {
               document.body.classList.remove('vue-ui-dark-mode')
@@ -113,4 +140,31 @@ function initApp(shell) {
       }
     }).$mount("#app");
   });
+}
+
+
+function getContextMenuInstance () {
+  bridge.send('get-context-menu-target')
+}
+
+// Pane visibility management
+
+function ensurePaneShown (cb) {
+  if (panelShown) {
+    cb()
+  } else {
+    pendingAction = cb
+  }
+}
+
+function onPanelShown () {
+  panelShown = true
+  if (pendingAction) {
+    pendingAction()
+    pendingAction = null
+  }
+}
+
+function onPanelHidden () {
+  panelShown = false
 }
