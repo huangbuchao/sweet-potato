@@ -22,7 +22,7 @@
       />
       <a
         v-if="!$isChrome"
-        v-tooltip="'Inspect DOM'"
+        v-tooltip="'Inspect Node'"
         class="button inspect"
         @click="inspectDOM"
       >

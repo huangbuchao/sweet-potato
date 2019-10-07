@@ -43,7 +43,7 @@
       <span class="spacer" />
 
       <VueIcon
-        v-tooltip="'Scroll into view'"
+        v-tooltip="'Focus'"
         class="icon-button"
         icon="visibility"
         @click="scrollToInstance"

@@ -1,12 +1,12 @@
 <template>
   <scroll-pane>
     <action-header slot="header">
-      <div v-tooltip="$t('ComponentTree.filter.tooltip')" class="search">
+      <div v-tooltip="'Filter nodes'" class="search">
         <VueIcon icon="search" />
         <input ref="filterInstances" placeholder="Filter (text or /regexp/)" @input="filterInstances" />
       </div>
       <a
-        v-tooltip="$t('ComponentTree.select.tooltip')"
+        v-tooltip="'Select a node in the page'"
         :class="{active: selecting}"
         class="button select-component"
         @click="setSelecting(!selecting)"

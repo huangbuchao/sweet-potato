@@ -55,19 +55,16 @@
         <span class="actions">
           <VueIcon
             v-if="!editValid"
-            v-tooltip="editErrorMessage"
             class="small-icon warning"
             icon="warning"
           />
           <template v-else>
             <VueButton
-              v-tooltip="$t('DataField.edit.cancel.tooltip')"
               class="icon-button flat"
               icon-left="cancel"
               @click="cancelEdit()"
             />
             <VueButton
-              v-tooltip="$t('DataField.edit.submit.tooltip')"
               class="icon-button flat"
               icon-left="save"
               @click="submitEdit()"
@@ -78,7 +75,6 @@
       <template v-else>
         <!-- eslint-disable vue/no-v-html -->
         <span
-          v-tooltip="valueTooltip"
           :class="valueClass"
           class="value"
           @dblclick="openEdit()"
@@ -97,7 +93,7 @@
             <VueButton
               v-for="(info, index) of quickEdits"
               :key="index"
-              v-tooltip="info.title || 'Quick edit'"
+              v-tooltip="'Quick edit'"
               :class="info.class"
               :icon-left="info.icon"
               class="quick-edit icon-button flat"
