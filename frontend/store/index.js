@@ -5,7 +5,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import components from "../views/components/module.js";
-import events from "../views/events/module";
 import router from "../views/router/module";
 import stats from "../views/stats/module";
 import stores from "../views/store/module";
@@ -31,7 +30,6 @@ export function createStore() {
     },
     modules: {
       components,
-      events,
       router,
       stats,
       stores
@@ -51,7 +49,6 @@ export function createStore() {
           store.hotUpdate({
             modules: {
               components: require("../views/components/module").default,
-              events: require("../views/events/module").default,
               router: require("../views/router/module").default,
               stats: require("../views/stats/module").default,
               stores: require("../views/store/module").default
