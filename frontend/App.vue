@@ -22,13 +22,28 @@
           >
             Components
           </VueGroupButton>
-          <VueGroupButton value="store" icon-left="store" class="components-tab flat">
+          <VueGroupButton
+            v-tooltip="$t('App.store.tooltip')"
+            value="store"
+            icon-left="store"
+            class="components-tab flat"
+          >
             Store
           </VueGroupButton>
-          <VueGroupButton value="router" icon-left="toys" class="components-tab flat">
+          <VueGroupButton
+            v-tooltip="$t('App.router.tooltip')"
+            value="router"
+            icon-left="toys"
+            class="components-tab flat"
+          >
             Travel
           </VueGroupButton>
-          <VueGroupButton value="stats" icon-left="equalizer" class="components-tab flat">
+          <VueGroupButton
+            v-tooltip="$t('App.stats.tooltip')"
+            value="stats"
+            icon-left="equalizer"
+            class="components-tab flat"
+          >
             Profiler
           </VueGroupButton>
           <VueGroupButton
@@ -40,20 +55,21 @@
             icon-left="settings_applications"
             class="settings-tab flat"
             @focus.native="isRouterGroupOpen = false"
-          >Settings
+          >
+            Settings
           </VueGroupButton>
         </VueGroup>
         <VueButton
-            ref="refresh"
-            v-tooltip="$t('App.refresh.tooltip')"
-            class="refresh-button flat"
-            :class="{
+          ref="refresh"
+          v-tooltip="$t('App.refresh.tooltip')"
+          class="refresh-button flat"
+          :class="{
             'icon-button': !$responsive.wide
           }"
-            icon-left="refresh"
-            @click="refresh"
-          >
-            Refresh
+          icon-left="refresh"
+          @click="refresh"
+        >
+          Refresh
         </VueButton>
       </div>
     </div>
@@ -66,6 +82,7 @@
 import { SPECIAL_TOKENS } from "shared/util";
 import GroupDropdown from "./components/GroupDropdown.vue";
 import { mapState } from "vuex";
+import Keyboard from "./mixins/keyboard";
 
 export default {
   name: "App",
@@ -73,6 +90,41 @@ export default {
   components: {
     GroupDropdown
   },
+
+  mixins: [
+    Keyboard({
+      onKeyDown({ key, code, modifiers }) {
+        switch (modifiers) {
+          case "ctrl+alt":
+            if (key === "r" || code === "KeyR") {
+              this.refresh();
+              return false;
+            }
+            break;
+          case "ctrl":
+            if (code === "Digit1") {
+              this.$router.push({ name: "components" });
+              return false;
+            } else if (code === "Digit2") {
+              this.$router.push({ name: "store" });
+              return false;
+            } else if (code === "Digit3") {
+              this.$router.push({ name: "router" });
+              return false;
+            } else if (code === "Digit4") {
+              this.$router.push({ name: "stats" });
+              return false;
+            } else if (code === "Digit5") {
+              this.$router.push({ name: "setting" });
+              return false;
+            } else if (key === "p" || code === "KeyP") {
+              // Prevent chrome devtools from opening the print modal
+              return false;
+            }
+        }
+      }
+    })
+  ],
 
   data() {
     return {
@@ -142,7 +194,7 @@ export default {
 <style lang="stylus" src="./style/global.styl"></style>
 
 <style lang='stylus' scoped>
-.app
+.app {
   width: 100%;
   height: 100%;
   user-select: none;
@@ -150,21 +202,29 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-  .vue-ui-dark-mode &
-    background-color $dark-background-color
-  .vue-ui-high-contrast &
-    background black
 
-.header
+  .vue-ui-dark-mode & {
+    background-color: $dark-background-color;
+  }
+
+  .vue-ui-high-contrast & {
+    background: black;
+  }
+}
+
+.header {
   display: flex;
   align-items: center;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
   font-size: 14px;
   position: relative;
-  .vue-ui-dark-mode &
-    border-bottom 1px solid $dark-border-color
 
-.message-container
+  .vue-ui-dark-mode & {
+    border-bottom: 1px solid $dark-border-color;
+  }
+}
+
+.message-container {
   height: 1em;
   cursor: default;
   display: none;
@@ -172,6 +232,7 @@ export default {
   @media (min-width: $wide - 300px) {
     display: block;
   }
+}
 
 .message {
   color: $active-color;
