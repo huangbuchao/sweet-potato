@@ -75,6 +75,7 @@
     "file-loader": "^2.0.0",
     "style-resources-loader": "^1.2.1",
     "friendly-errors-webpack-plugin": "^1.7.0",
+    "uglifyjs-webpack-plugin": "^1.2.7",
     "@types/node": "^10.12.18",
     "@types/webpack": "^4.4.22",
     "ts-loader": "^6.0.4",
