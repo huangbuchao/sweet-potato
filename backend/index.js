@@ -180,9 +180,7 @@ function flush() {
       }`
     );
   }
-  // console.log("instanceMap: ", instanceMap);
-  // console.log("captureIds: ", captureIds);
-  // console.log("payload: ", payload);
+
   bridge.send("flush", payload);
 }
 
