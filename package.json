@@ -6,15 +6,30 @@
   "scripts": {
     "dev": "cross-env PORT=8024 npm run dev:shells",
     "dev:shells": "cd shells/dev && webpack-dev-server --inline --no-info",
-    "test": "echo \"Error: no test2 specified\" && exit 1",
+    "build:chrome": "",
+    "deploy": "",
     "typecheck": "flow check",
-    "lint": "eslint ."
+    "linc": "lint-staged",
+    "lint": "eslint '**/*.js'",
+    "lint:ci": "eslint '**/*.js' --max-warnings 0",
+    "lint:fix": "eslint --fix",
+    "precommit": "lint-staged",
+    "git:help": "",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:chrome": "echo \"Error: no test specified\" && exit 1",
+    "test:standalone": "echo \"Error: no test specified\" && exit 1"
   },
   "types": "types/potato.d.ts",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
+  "lint-staged": {
+    "{agent}**/*.{js,json}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/huangbuchao/sweet-potato.git",
@@ -80,7 +95,8 @@
     "@types/webpack": "^4.4.22",
     "ts-loader": "^6.0.4",
     "typescript": "^3.5.3",
-    "lerna": "^2.8.0"
+    "lerna": "^2.8.0",
+    "lint-staged": "^7.0.5"
   },
   "engines": {
     "node": ">=8.10"
