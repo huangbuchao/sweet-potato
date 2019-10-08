@@ -4,7 +4,7 @@ const { execSync } = require("child_process");
 
 const args = process.argv.slice(2);
 const commitMessagePrefix = {
-  default: ":flower::honeybee:chore: ",
+  default: ":flower::honeybee:chore: update a little",
   frontend: ":snail::deciduous_tree:chore: ",
   backend: ":seedling::cat2:chore: ",
   shared: ":turtle::shell:chore: ",
