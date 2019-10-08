@@ -17,7 +17,7 @@ function push(arg1 = "default", ...argRest) {
     execSync("cd ..");
     execSync("git status");
     execSync("git add .");
-    execSync(`git commit -m "${commitMessagePrefix[arg1]}${argRest.join(" ")}"`);
+    execSync(`git commit -m "${commitMessagePrefix[arg1]}${argRest && argRest.join(" ")}"`);
     execSync("git push");
   } catch (error) {
     console.error(error);
