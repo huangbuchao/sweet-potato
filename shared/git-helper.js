@@ -12,14 +12,13 @@ const commitMessagePrefix = {
   shells: ":mushroom::jack_o_lantern:chore: ",
 };
 
-function push(arg1 = "default", arg2 = "update a little") {
-  console.log(arg1, arg2);
+function push(arg1 = "default", ...argRest) {
   try {
-    console.log('pendding');
+    execSync("cd ..");
+    execSync("git status");
     execSync("git add .");
-    execSync(`git commit -m "${commitMessagePrefix[arg1]}${arg2}"`);
+    execSync(`git commit -m "${commitMessagePrefix[arg1]}${argRest.join(" ")}"`);
     execSync("git push");
-    console.log('push done');
   } catch (error) {
     console.error(error);
   }
