@@ -1,3 +1,4 @@
+const path = require("path");
 const baseConfig = require("../baseConfig");
 
 module.exports = baseConfig({
@@ -8,7 +9,7 @@ module.exports = baseConfig({
     launch: "../../backend/mock-launcher.js"
   },
   output: {
-    path: __dirname + '/build',
+    path: path.join(__dirname, '/build'),
     publicPath: "/build/",
     filename: "[name].js"
   },
