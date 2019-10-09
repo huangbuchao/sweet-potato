@@ -24,6 +24,11 @@
   "workspaces": [
     "packages/*"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "{agent}**/*.{js,json}": [
       "eslint --fix",
@@ -84,6 +89,7 @@
     "flow-bin": "0.105.2",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "fs-extra": "^8.1.0",
+    "husky": "^3.0.8",
     "lerna": "^2.8.0",
     "lint-staged": "^7.0.5",
     "log-update": "^2.0.0",
