@@ -13,7 +13,6 @@
     "lint": "eslint '**/*.js'",
     "lint:ci": "eslint '**/*.js' --max-warnings 0",
     "lint:fix": "eslint --fix",
-    "precommit": "lint-staged",
     "gitpush": "node git-helper",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:chrome": "echo \"Error: no test specified\" && exit 1",
