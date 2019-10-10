@@ -1,115 +1,61 @@
 #!/usr/bin/env node
 
-"use strict"
+const { readFileSync, writeFileSync } = require("fs");
+const { exec, execSync } = require("child_process");
+const { join } = require("path");
 
-const chalk = require("chalk");
-const AmdZip = require("adm-zip");
-const logUpdate = require("log-update");
-const { dots } = require("cli-spinners");
-const { join, relative } = require("path");
-const { exec } = require("child-process-promise");
-const { copy, ensureDir, move, remove } = require("fs-extra");
+const main = async buildId => {
+  const root = join(__dirname, "..", buildId);
+  const buildPath = join(root, "build");
 
-const STATIC_FILES = [
-  "build",
-  "target",
-  "index.html"
-];
-
-const relativePath = path => relative(process.cwd(), path);
-
-const logPromise = async (promise, text, completedLabel = "") => {
-  const { frames, interval } = dots;
-  let index = 0;
-
-  const id = setInterval(() => {
-    index = ++index % frames.length;
-    logUpdate(`${chalk.yellow(frames[index])} ${text} ${chalk.gray("- pending, this may take a few seconds")}`);
-  }, interval);
-
-  const result = await promise;
-
-  clearInterval(id);
-
-  logUpdate(`${chalk.green("√")} ${text} ${chalk.gray(completedLabel)}`);
-  logUpdate.done();
-
-  return result;
-}
-
-const preProcess = async (destinationPath, tempPath) => {
-  await remove(destinationPath);
-  await remove(tempPath);
-  await ensureDir(tempPath);
-}
-
-const build = async (tempPath, manifestPath) => {
-  const binPath = join(tempPath, "bin");
-  const zipPath = join(tempPath, "zip");
-  const webpackPath = join(__dirname, "..", "..", "node_modules", ".bin", "webpack");
-
-  await exec(
-    `${webpackPath} --config webpack.config.js --output-path ${binPath}`,
+  execSync(
+    `node ${join(root, "./build")}`,
     {
       cwd: __dirname,
-      env: Object.assign({}, process.env, { NODE_ENV: "production" })
+      env: {
+        ...process.env,
+        NODE_ENV: "production"
+      },
+      stdio: "inherit"
     }
   );
 
-  await ensureDir(zipPath);
-
-  await copy(binPath, join(zipPath, "build"));
-  await copy(manifestPath, join(zipPath, "manifest.json"));
-  await Promise.all(
-    STATIC_FILES.map(file => copy(join(__dirname, file), join(zipPath, file)))
+  await exec(
+    `cp ${join(root, "now.json")} ${join(buildPath, "now.json")}`,
+    {
+      env: root
+    }
   );
 
-  const zip = new AmdZip();
-  zip.addLocalFolder(zipPath);
-  zip.writeZip(join(tempPath, `packed.zip`));
-}
+  const file = readFileSync(join(root, "now.json"));
+  const json = JSON.parse(file);
+  const alias = json.alias[0];
 
-const postProcess = async (tempPath, destinationPath) => {
-  const unpackedSourcePath = join(tempPath, "zip");
-  const packedSourcePath = join(tempPath, "packed.zip");
-  const packedDestPath = join(destinationPath, "packed.zip");
-  const unpackedDestPath = join(destinationPath, "unpacked");
+  const commit = execSync("git rev-parse HEAD").toString().trim().substr(0, 7);
 
-  await move(unpackedSourcePath, unpackedDestPath);
-  await move(packedSourcePath, packedDestPath);
-  await remove(tempPath); // Clean up temp directory and files
-}
+  let date = new Date();
+  date = `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`;
 
-const main = async (buildId, manifestPath, destinationPath) => {
-  try {
-    const tempPath = join(__dirname, "build", buildId);
+  const installationInstructions = buildId === "chrome" ?
+    readFileSync(join(__dirname, "deploy.chrome.html")) :
+    readFileSync(join(__dirname, "deploy.firefox.html"));
 
-    await logPromise(
-      preProcess(destinationPath, tempPath),
-      "Preparing build"
-    );
+  let html = readFileSync(join(__dirname, "deploy.html")).toString();
+  html = html.replace(/%commit%/, commit);
+  html = html.replace(/%date%/, date);
+  html = html.replace(/%installation%/, installationInstructions);
 
-    await logPromise(
-      build(tempPath, manifestPath),
-      "Building extension",
-      `- temporary files in ${relativePath(tempPath)}`
-    );
+  writeFileSync(join(buildPath, "index.html"), html);
 
-    const builtUnpackedPath = join(destinationPath, "unpacked");
+  await exec(
+    `now deploy && now alias ${alias}`,
+    {
+      cwd: buildPath,
+      stdio: "inherit"
+    }
+  );
 
-    await logPromise(
-      postProcess(tempPath, destinationPath),
-      "Unpacking extension",
-      `- artifacts in ${relativePath(destinationPath)}`
-    );
-
-    return builtUnpackedPath;
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
-  }
-
-  return null;
-}
+  console.log(`Deployed to https://${alias}.now.sh`);
+};
 
 module.exports = main;
