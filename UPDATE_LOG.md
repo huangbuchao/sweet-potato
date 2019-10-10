@@ -1,4 +1,4 @@
-## (2019-09-29 -> 2019-10-30)
+## (2019-09-29 -> ...)
 
 #### :bug::gun: fix: seletor bug(Component Tree) :white_check_mark:
 
