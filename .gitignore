@@ -2,6 +2,9 @@ library/
 temp/
 local/
 build/
+shells/dev/build/
+shells/chrome/build/
+shells/electron/build/
 packages/sweet-potato-game/library/
 packages/sweet-potato-game/temp/
 packages/sweet-potato-game/node_modules/

@@ -19,6 +19,10 @@
 
 - RELEASE VERSION 1.0.0
 
+#### :snail: rewirite game-compiler package :arrows_counterclockwise:
+
+- custom version.
+
 #### :tada: Release v2.0.0 :arrows_counterclockwise:
 
 - Add feature: setting and store support.

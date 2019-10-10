@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "cross-env PORT=8024 npm run dev:shells",
     "dev:shells": "cd shells/dev && webpack-dev-server --inline --no-info",
+    "build:dev": "cd shells/dev && ./build.sh",
     "build:chrome": "",
     "deploy": "",
     "typecheck": "flow check",

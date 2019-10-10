@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 "use strict"
 
 const chalk = require("chalk");
@@ -23,7 +25,7 @@ const logPromise = async (promise, text, completedLabel = "") => {
 
   const id = setInterval(() => {
     index = ++index % frames.length;
-    logUpdate(`${chalk.yellow(frames[index])} ${text} ${chalk.gray("- pendding, this may take a few seconds")}`);
+    logUpdate(`${chalk.yellow(frames[index])} ${text} ${chalk.gray("- pending, this may take a few seconds")}`);
   }, interval);
 
   const result = await promise;
