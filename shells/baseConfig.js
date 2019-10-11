@@ -74,7 +74,6 @@ module.exports = config => {
       new VueLoaderPlugin(),
       new FriendlyErrorsPlugin(),
       new webpack.DefinePlugin({
-        __DEV__: "__DEV__",
         "process.env.POTATO": "handon"
       })
     ]

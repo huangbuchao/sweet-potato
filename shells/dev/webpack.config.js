@@ -13,5 +13,5 @@ module.exports = baseConfig({
     publicPath: "/build/",
     filename: "[name].js"
   },
-  devtool: "#cheap-module-source-map",
+  devtool: process.env.NODE_ENV === 'development' ? "#cheap-module-source-map" : false,
 });
