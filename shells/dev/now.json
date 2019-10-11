@@ -1,5 +1,5 @@
 {
     "name": "sweet-potato-devtools-dev",
     "alias": ["sweet-potato-devtools-dev"],
-    "files": ["index.html", "ReactDevTools.zip"]
+    "files": ["index.html", "dist"]
 }

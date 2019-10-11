@@ -1,0 +1,5 @@
+{
+    "name": "sweet-potato-devtools-chrome",
+    "alias": ["sweet-potato-devtools-chrome"],
+    "files": ["index.html", "PotatoDevTools.zip"]
+}

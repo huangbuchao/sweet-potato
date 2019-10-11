@@ -1,0 +1,5 @@
+{
+    "name": "sweet-potato-devtools-firefox",
+    "alias": ["sweet-potato-devtools-firefox"],
+    "files": ["index.html", "PotatoDevTools.zip"]
+}
