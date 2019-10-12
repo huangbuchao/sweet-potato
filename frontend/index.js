@@ -100,6 +100,10 @@ function initApp(shell) {
 
     bridge.on("ready", version => {
       store.commit("SHOW_MESSAGE", "Detected Cocos " + version + ".");
+
+      if (isChrome) {
+        chrome.runtime.sendMessage('potato-panel-load')
+      }
     });
 
     bridge.on("flush", payload => {
