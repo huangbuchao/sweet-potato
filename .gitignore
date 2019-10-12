@@ -4,6 +4,7 @@ local/
 build/
 shells/dev/build/
 shells/chrome/build/
+shells/firefox/build/
 shells/electron/build/
 packages/sweet-potato-game/library/
 packages/sweet-potato-game/temp/
