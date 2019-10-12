@@ -4,7 +4,7 @@ import { isFirefox } from "shared/env";
 import { installToast } from "backend/toast";
 
 window.addEventListener("message", e => {
-  if(e.source == window && e.data.source.ccDetected) {
+  if(e.source == window && e.data.ccDetected) {
     chrome.runtime.sendMessage(e.data);
   }
 });
@@ -16,7 +16,7 @@ function detect(win) {
     if(ccDetected) {
       window.__POTATO_DEVTOOLS_GLOBAL_HOOK__.emit("init", window.cc);
       win.postMessage({
-        devtoolsEnabled: window.cc && window.cc.director,
+        devtoolsEnabled: !!window.cc,
         ccDetected
       }, "*");
     }

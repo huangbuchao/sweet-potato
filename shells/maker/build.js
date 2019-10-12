@@ -13,8 +13,8 @@ const { copy, ensureDir, move, remove } = require("fs-extra");
 const STATIC_FILES = [
   "icons",
   "popups",
-  "main.html",
-  "pane.html"
+  "devtools.html",
+  "devtools-background.html"
 ];
 
 const relativePath = path => relative(process.cwd(), path);
@@ -32,7 +32,7 @@ const logPromise = async (promise, text, completedLabel = "") => {
 
   clearInterval(id);
 
-  logUpdate(`${chalk.green("√")} ${text} ${chalk.gray(completedLabel)}`);
+  logUpdate(`${chalk.green("✓")} ${text} ${chalk.gray(completedLabel)}`);
   logUpdate.done();
 
   return result;
@@ -53,7 +53,7 @@ const build = async (tempPath, manifestPath) => {
     `${webpackPath} --config webpack.config.js --output-path ${binPath}`,
     {
       cwd: __dirname,
-      env: Object.assign({}, process.env, { NODE_ENV: "production" })
+      env: Object.assign({}, process.env, { NODE_ENV: "development" })
     }
   );
 

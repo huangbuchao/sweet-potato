@@ -95,7 +95,7 @@ chrome.runtime.onMessage.addListener((req, sender) => {
 
     chrome.browserAction.setPopup({
       tabId: sender.tab.id,
-      popup: req.devtoolsEnabled ? "popup/enabled.html" : "popup/disabled.html"
+      popup: req.devtoolsEnabled ? "popups/enabled.html" : "popups/disabled.html"
     });
   }
 });

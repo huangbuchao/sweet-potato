@@ -1,7 +1,7 @@
 //@flow
 
 import { initBackend } from "backend";
-import Bridge from "shared/bridge";
+import Bridge from "agent/bridge";
 
 window.addEventListener("message", handshake);
 

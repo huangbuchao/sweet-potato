@@ -18,7 +18,7 @@ function sendMessageToBackend(payload) {
 }
 
 function sendMessageToDevtools(e) {
-  if(e.data && e.data.source === "patato-devtools-backend") {
+  if(e.data && e.data.source === "potato-devtools-backend") {
     port.postMessage(e.data.payload);
   }
 }

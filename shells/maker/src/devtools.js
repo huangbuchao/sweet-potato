@@ -16,12 +16,12 @@ initDevtools({
       });
 
       cb(new Bridge({
-        lisene(fn) {
+        listen(fn) {
           port.onMessage.addListener(fn);
         },
         send(data) {
           if(!disconnected) {
-            port.sendMessage(data);
+            port.postMessage(data);
           }
         }
       }));
