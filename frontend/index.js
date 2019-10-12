@@ -36,9 +36,9 @@ if (isChrome) {
   }
 
   chrome.runtime.onMessage.addListener(request => {
-    if (request === 'vue-panel-shown') {
+    if (request === 'potato-panel-shown') {
       onPanelShown()
-    } else if (request === 'vue-panel-hidden') {
+    } else if (request === 'potato-panel-hidden') {
       onPanelHidden()
     } else if (request === 'vue-get-context-menu-target') {
       getContextMenuInstance()
@@ -71,7 +71,9 @@ export function initDevtools(shell) {
         app.$destroy();
       }
       bridge.removeAllListeners();
-      initApp(shell);
+      setTimeout(() => {
+        initApp(shell);
+      }, 2000);
     });
   });
 }
