@@ -84,7 +84,7 @@ export function installHook(target) {
 
   hook.once('init', cc => {
     hook.cc = cc;
-    console.log(cc);
+
     cc.$inspect = function() {
       const fn = target.__POTATO_DEVTOOLS_INSPECT__;
       fn && fn(this);
