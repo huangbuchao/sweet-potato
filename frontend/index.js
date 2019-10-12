@@ -106,6 +106,13 @@ function initApp(shell) {
       }
     });
 
+    bridge.once('proxy-fail', () => {
+      store.commit(
+        'SHOW_MESSAGE',
+        'Proxy injection failed.'
+      )
+    });
+
     bridge.on("flush", payload => {
       store.commit("components/FLUSH", parse(payload));
     });
