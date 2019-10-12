@@ -14,6 +14,7 @@ function detect(win) {
     const ccDetected = Boolean(window.cc);
 
     if(ccDetected) {
+      window.__POTATO_DEVTOOLS_GLOBAL_HOOK__.emit("init", window.cc);
       win.postMessage({
         devtoolsEnabled: window.cc && window.cc.director,
         ccDetected
