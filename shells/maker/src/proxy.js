@@ -8,6 +8,8 @@ port.onMessage.addListener(sendMessageToBackend);
 window.addEventListener("message", sendMessageToDevtools);
 port.onDisconnect.addListener(handleDisconnect);
 
+sendMessageToBackend("init");
+
 function sendMessageToBackend(payload) {
   window.postMessage({
     source: "potato-devtools-proxy",
