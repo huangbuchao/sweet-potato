@@ -13,7 +13,7 @@
     "deploy:dev": "cd shells/dev && now deploy",
     "deploy:chrome": "cd shells/chrome && node deploy.js",
     "deploy:firefox": "echo \"Error: firefox is WIP...\" && exit 1",
-    "release": "node release.js",
+    "release": "node ./shared/release.js",
     "typecheck": "flow check",
     "linc": "lint-staged",
     "lint": "eslint '**/*.js'",
