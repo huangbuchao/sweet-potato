@@ -3,6 +3,7 @@
 const { readFileSync, writeFileSync } = require("fs");
 const { exec, execSync } = require("child_process");
 const { join } = require("path");
+const chalk = require("chalk");
 
 const main = async buildId => {
   const root = join(__dirname, "..", buildId);
@@ -41,11 +42,13 @@ const main = async buildId => {
     readFileSync(join(__dirname, "deploy.firefox.html"));
 
   let html = readFileSync(join(__dirname, "deploy.html")).toString();
-  html = html.replace(/%commit%/, commit);
-  html = html.replace(/%date%/, date);
+  html = html.replace(/%commit%/g, commit);
+  html = html.replace(/%date%/g, date);
   html = html.replace(/%installation%/, installationInstructions);
 
   writeFileSync(join(buildPath, "index.html"), html);
+
+  console.log(chalk.green(`Deploy to https://${alias}.now.sh`));
 
   await exec(
     `now deploy && now alias ${alias}`,
@@ -54,8 +57,7 @@ const main = async buildId => {
       stdio: "inherit"
     }
   );
-
-  console.log(`Deployed to https://${alias}.now.sh`);
 };
+
 
 module.exports = main;

@@ -67,14 +67,14 @@ const build = async (tempPath, manifestPath) => {
 
   const zip = new AmdZip();
   zip.addLocalFolder(zipPath);
-  zip.writeZip(join(tempPath, `packed.zip`));
+  zip.writeZip(join(tempPath, "PotatoDevTools.zip"));
 }
 
 const postProcess = async (tempPath, destinationPath) => {
   const unpackedSourcePath = join(tempPath, "zip");
-  const packedSourcePath = join(tempPath, "packed.zip");
-  const packedDestPath = join(destinationPath, "packed.zip");
-  const unpackedDestPath = join(destinationPath, "unpacked");
+  const packedSourcePath = join(tempPath, "PotatoDevTools.zip");
+  const packedDestPath = join(destinationPath, "PotatoDevTools.zip");
+  const unpackedDestPath = join(destinationPath, "PotatoDevTools");
 
   await move(unpackedSourcePath, unpackedDestPath);
   await move(packedSourcePath, packedDestPath);
