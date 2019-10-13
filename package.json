@@ -99,6 +99,7 @@
     "log-update": "^2.0.0",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^0.5.1",
+    "semver": "^5.5.1",
     "style-loader": "^1.0.0",
     "style-resources-loader": "^1.2.1",
     "stylus": "^0.54.5",
