@@ -111,6 +111,7 @@ export default class ComponentSelector {
   }
 
   //TODO: anchor point;
+  //Qualified condition: 1: contained. 2:
   filterQualifiedNodes(p) {
     const values = this.instanceMap.values();
     const nodes = Array.from(values);
@@ -130,7 +131,8 @@ export default class ComponentSelector {
     const ratioH = this.canvasRect.height / rootInstance.height;
     return { ratioW, ratioH };
   }
-
+  //TODO: adjustSize = ...parent.scale * self.scale * self.size.
+  //TODO: actualSize = anchor * p * adjustSize.
   isContained(p, { x, y, width, height }, { ratioW, ratioH }) {
     const minX = x - width / 2;
     const maxX = x + width / 2;
