@@ -129,11 +129,15 @@ function scan() {
 
   if (canvas) {
     canvas[0].$rootParent = canvas[0];
+    canvas[0].__POTATO_DEVTOOLS_SELECTOR_SCALEX__ = canvas[0].scaleX;
+    canvas[0].__POTATO_DEVTOOLS_SELECTOR_SCALEY__ = canvas[0].scaleY;
 
     walk(canvas[0], node => {
       if (!node.$rootParent) {
         node.$rootParent = canvas[0];
       }
+      node.__POTATO_DEVTOOLS_SELECTOR_SCALEX__ = node.scaleX * node.parent.__POTATO_DEVTOOLS_SELECTOR_SCALEX__;
+      node.__POTATO_DEVTOOLS_SELECTOR_SCALEY__ = node.scaleY * node.parent.__POTATO_DEVTOOLS_SELECTOR_SCALEY__;
     });
 
     canvas && rootInstances.push(...canvas);
@@ -386,15 +390,6 @@ function initRightClick() {
   document.addEventListener("contextmenu", event => {
     const el = event.target;
     console.log("right click capture dom: ", el);
-    // if (el) {
-    //   Search for parent that "is" a component instance
-    //   const instance = findRelatedComponent(el)
-    //   if (instance) {
-    //     window.__POTATO_DEVTOOLS_CONTEXT_MENU_HAS_TARGET__ = true
-    //     window.__POTATO_DEVTOOLS_CONTEXT_MENU_TARGET__ = instance
-    //     return
-    //   }
-    // }
     window.__POTATO_DEVTOOLS_CONTEXT_MENU_HAS_TARGET__ = null;
     window.__POTATO_DEVTOOLS_CONTEXT_MENU_TARGET__ = null;
   });

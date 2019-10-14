@@ -111,7 +111,7 @@ export default class ComponentSelector {
   }
 
   //TODO: anchor point;
-  //Qualified condition: 1: contained. 2:
+  //Qualified condition: 1: contained. 2: the highest render index
   filterQualifiedNodes(p) {
     const values = this.instanceMap.values();
     const nodes = Array.from(values);
@@ -119,16 +119,25 @@ export default class ComponentSelector {
 
     return nodes.filter(node => {
       const { x, y, width, height } = node;
+      const {
+        __POTATO_DEVTOOLS_SELECTOR_SCALEX__,
+        __POTATO_DEVTOOLS_SELECTOR_SCALEY__
+      } = node;
       const worldPosition = node.parent.convertToWorldSpaceAR({ x, y });
-      const rect = { x: worldPosition.x, y: worldPosition.y, width, height };
+      const rect = {
+        x: worldPosition.x,
+        y: worldPosition.y,
+        width: width * __POTATO_DEVTOOLS_SELECTOR_SCALEX__,
+        height: height * __POTATO_DEVTOOLS_SELECTOR_SCALEY__
+      };
       return this.isContained(p, rect, ratio);
     });
   }
 
   getDynamicRatio(instance) {
     const rootInstance = instance.$rootParent;
-    const ratioW = this.canvasRect.width / rootInstance.width;
-    const ratioH = this.canvasRect.height / rootInstance.height;
+    const ratioW = this.canvasRect.width / (rootInstance.width * rootInstance.__POTATO_DEVTOOLS_SELECTOR_SCALEX__);
+    const ratioH = this.canvasRect.height / (rootInstance.height * rootInstance.__POTATO_DEVTOOLS_SELECTOR_SCALEY__);
     return { ratioW, ratioH };
   }
   //TODO: adjustSize = ...parent.scale * self.scale * self.size.

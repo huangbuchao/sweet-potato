@@ -73,14 +73,20 @@ export function getInstanceRect(instance) {
   //TODO: anchor transform.
   //TODO: rotation solution.
   const { width, height } = instance;
+  const {
+    __POTATO_DEVTOOLS_SELECTOR_SCALEX__,
+    __POTATO_DEVTOOLS_SELECTOR_SCALEY__
+  } = instance;
+  const widthT = width * __POTATO_DEVTOOLS_SELECTOR_SCALEX__;
+  const heightT = height * __POTATO_DEVTOOLS_SELECTOR_SCALEY__;
   const { x, y } = instance.parent.convertToWorldSpaceAR({ x: instance.x, y: instance.y });
 
-  const widthRatio = canvasRect.width / rootInstance.width;
-  const heightRatio = canvasRect.height / rootInstance.height;
-  const relativeY = rootInstance.height - y;
+  const widthRatio = canvasRect.width / (rootInstance.width * rootInstance.__POTATO_DEVTOOLS_SELECTOR_SCALEX__);
+  const heightRatio = canvasRect.height / (rootInstance.height * rootInstance.__POTATO_DEVTOOLS_SELECTOR_SCALEY__);
+  const relativeY = (rootInstance.height * rootInstance.__POTATO_DEVTOOLS_SELECTOR_SCALEY__) - y;
 
-  instanceRect.width = width * widthRatio;
-  instanceRect.height = height * heightRatio;
+  instanceRect.width = widthT * widthRatio;
+  instanceRect.height = heightT * heightRatio;
   instanceRect.left = x * widthRatio + canvasRect.left - instanceRect.width / 2;
   instanceRect.top = relativeY * heightRatio + canvasRect.top - instanceRect.height / 2;
 
