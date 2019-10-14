@@ -48,7 +48,7 @@ const main = async buildId => {
 
   writeFileSync(join(buildPath, "index.html"), html);
 
-  console.log(chalk.green(`Deploy to https://${alias}.now.sh`));
+  console.log(chalk.blue(`Deploy to https://${alias}.now.sh`));
 
   await exec(
     `now deploy && now alias ${alias}`,
