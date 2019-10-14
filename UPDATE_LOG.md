@@ -15,7 +15,7 @@
 - `props inspect`
   - Provides internal information about components.
 
-#### :tada: Release v1.0.0 :arrows_counterclockwise:
+#### :tada: Release v1.0.0 :white_check_mark:
 
 - RELEASE VERSION 1.0.0
 
