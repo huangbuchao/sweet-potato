@@ -51,7 +51,7 @@ const main = async buildId => {
   console.log(chalk.blue(`Deploy to https://${alias}.now.sh`));
 
   await exec(
-    `now deploy && now alias ${alias}`,
+    `now --prod`,
     {
       cwd: buildPath,
       stdio: "inherit"
