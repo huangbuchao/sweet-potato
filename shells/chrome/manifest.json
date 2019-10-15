@@ -1,7 +1,7 @@
 {
   "name": "Potato devtools",
-  "version": "1.0.0",
-  "version_name": "1.0.0",
+  "version": "1.0.1",
+  "version_name": "1.0.1",
   "description": "Chrome DevTools extension for debugging cocos applications.",
   "manifest_version": 2,
   "icons": {

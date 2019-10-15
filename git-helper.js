@@ -10,6 +10,7 @@ const commitMessagePrefix = {
   shared: ":turtle::shell:chore: ",
   agent: ":earth_asia::dragon:chore: ",
   shells: ":mushroom::jack_o_lantern:chore: ",
+  release: ":tada::tada::tada:update version: "
 };
 
 function push(arg1 = "default", ...argRest) {

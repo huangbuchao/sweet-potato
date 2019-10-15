@@ -6,6 +6,7 @@ const semver = require("semver");
 const pkg = require("../package.json");
 const manifest = require("../shells/chrome/manifest.json");
 const {join} = require("path");
+const { exec } = require("child_process");
 
 const currentVersion = pkg.version;
 
@@ -26,6 +27,12 @@ const currentVersion = pkg.version;
     process.exit(1)
   }
 
+  const { commitMessage } = await inquirer.prompt([{
+    type: "input",
+    name: "commitMessage",
+    message: `Please input this commit message (default: null):`
+  }]);
+
   const { yes } = await inquirer.prompt([{
     type: "confirm",
     name: "yes",
@@ -42,4 +49,8 @@ const currentVersion = pkg.version;
   }else{
     process.exit(1);
   }
+
+  await exec(`npm run gitpush release ${commitMessage}`);
+
+  await exec("npm run deploy");
 })();

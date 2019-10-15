@@ -97,7 +97,6 @@ export default {
     },
 
     filterInstances (e) {
-      console.log(e.target.value);
       bridge.send('filter-instances', e.target.value);
     },
 

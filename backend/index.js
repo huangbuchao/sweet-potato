@@ -3,6 +3,7 @@
  */
 
 import { target, isBrowser } from "shared/env";
+// eslint-disable-next-line no-unused-vars
 import { highLight, unHighLight, getInstanceRect } from "./highlighter";
 import ComponentSelector from "./component-selector";
 import { stringify, parse, set, flatten } from "../shared/util";
@@ -316,6 +317,7 @@ function isQualified(instance) {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 function capture(instance, index, list) {
   if (process.env.NODE_ENV !== "production") {
     captureCount++;
@@ -340,13 +342,13 @@ function capture(instance, index, list) {
     inactive: !instance.active,
     children: instance.children.map(capture).filter(Boolean)
   };
-
-  if ((!list || list.length > 1) && instance.active) {
-    const rect = getInstanceRect(instance);
-    ret.top = rect ? rect.top : Infinity;
-  } else {
-    ret.top = Infinity;
-  }
+  //TODO:
+  // if ((!list || list.length > 1) && instance.active) {
+  //   const rect = getInstanceRect(instance);
+  //   ret.top = rect ? rect.top : Infinity;
+  // } else {
+  //   ret.top = Infinity;
+  // }
 
   return ret;
 }

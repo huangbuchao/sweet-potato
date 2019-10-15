@@ -1,6 +1,6 @@
 {
   "name": "sweet-potato",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A chrome extension",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "build:chrome": "cd shells/chrome && node build.js",
     "build:firefox": "echo \"Error: firefox is WIP...\" && exit 1",
     "deploy": "npm run deploy:dev && npm run deploy:chrome",
-    "deploy:dev": "cd shells/dev && now --prod",
+    "deploy:dev": "cd shells/dev && ./build.sh && now --prod",
     "deploy:chrome": "cd shells/chrome && node deploy.js",
     "deploy:firefox": "echo \"Error: firefox is WIP...\" && exit 0",
     "release": "node ./shared/release.js && npm run deploy",

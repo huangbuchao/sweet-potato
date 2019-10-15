@@ -98,9 +98,10 @@ export default {
     },
 
     sortedChildren() {
-      return this.instance.children.slice().sort((a, b) => {
-        return a.top === b.top ? a.id - b.id : a.top - b.top;
-      });
+      return this.instance.children;
+      // return this.instance.children.slice().sort((a, b) => {
+      //   return a.top === b.top ? a.id - b.id : a.top - b.top;
+      // });
     },
 
     displayName() {
