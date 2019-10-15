@@ -1,6 +1,7 @@
 #!/bin/usr/env node
 
 const { execSync } = require("child_process");
+const { version } = require("./package.json");
 
 const args = process.argv.slice(2);
 const commitMessagePrefix = {
@@ -18,6 +19,10 @@ function push(arg1 = "default", ...argRest) {
     execSync("git add .");
     execSync(`git commit -m "${commitMessagePrefix[arg1]}${argRest && argRest.join(" ")}"`);
     execSync("git push");
+    if(arg1 === "release") {
+      execSync(`git tag v${version}`);
+      execSync(`git push origin v${version}`);
+    }
   } catch (error) {
     console.error(error);
   }
