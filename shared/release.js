@@ -50,7 +50,7 @@ const currentVersion = pkg.version;
     process.exit(1);
   }
 
-  await exec(`npm run gitpush release ${commitMessage}`);
+  await exec(`npm run gitpush release ${newVersion} - ${commitMessage}`);
 
   await exec("npm run deploy");
 })();
