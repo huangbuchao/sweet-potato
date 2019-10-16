@@ -4,7 +4,7 @@
 
 import { target, isBrowser } from "shared/env";
 // eslint-disable-next-line no-unused-vars
-import { highLight, unHighLight, getInstanceRect } from "./highlighter";
+import { highLight, unHighLight } from "./highlighter";
 import ComponentSelector from "./component-selector";
 import { stringify, parse, set, flatten } from "../shared/util";
 import { init as initStorage } from "../shared/storage";
@@ -17,7 +17,10 @@ let rootInstanceId;
 let captureCount = 0;
 let currentInspectedId;
 let rootInstances = [];
+const rootInstance = {};
 
+const captureScaleXs = new Map();
+const captureScaleYs = new Map();
 const captureIds = new Map(); //dedupe
 const hook = target.__POTATO_DEVTOOLS_GLOBAL_HOOK__;
 
@@ -69,7 +72,7 @@ function connect(cc) {
       const instance = findInstance(id);
       if (instance) {
         scrollToInstance(instance);
-        highLight(instance);
+        highLight(instance, getInstanceRect(instance));
       }
     });
 
@@ -83,13 +86,13 @@ function connect(cc) {
     bridge.on("enter-instance", id => {
       const instance = findInstance(id);
       if (instance) {
-        highLight(instance);
+        highLight(instance, getInstanceRect(instance));
       }
     });
 
     bridge.on("leave-instance", unHighLight);
 
-    new ComponentSelector(bridge, instanceMap);
+    new ComponentSelector(bridge, instanceMap, rootInstance, captureScaleXs, captureScaleYs);
 
     bridge.on("set-instance-data", args => {
       setInstanceData(args);
@@ -123,29 +126,25 @@ export function findInstance(id) {
 
 function scan() {
   rootInstances = [];
-  const scene = hook.cc.director._scene;
+  const director = hook.cc.director;
+  const scene = director && director._scene;
   const canvas = scene && scene.children;
 
-  rootInstanceId = canvas && canvas[0].__instanceId;
+  if (canvas && canvas.length !== 0) {
+    rootInstanceId = canvas && canvas[0].__instanceId;
+    rootInstance.root = canvas[0];
 
-  if (canvas) {
-    canvas[0].$rootParent = canvas[0];
-    canvas[0].__POTATO_DEVTOOLS_SELECTOR_SCALEX__ = canvas[0].scaleX;
-    canvas[0].__POTATO_DEVTOOLS_SELECTOR_SCALEY__ = canvas[0].scaleY;
-
-    walk(canvas[0], node => {
-      if (!node.$rootParent) {
-        node.$rootParent = canvas[0];
-      }
-      node.__POTATO_DEVTOOLS_SELECTOR_SCALEX__ = node.scaleX * node.parent.__POTATO_DEVTOOLS_SELECTOR_SCALEX__;
-      node.__POTATO_DEVTOOLS_SELECTOR_SCALEY__ = node.scaleY * node.parent.__POTATO_DEVTOOLS_SELECTOR_SCALEY__;
-    });
+    // walk(canvas[0], node => {
+    //   if (!node.$rootParent) {
+    //     node.$rootParent = canvas[0];
+    //   }
+    // });
 
     canvas && rootInstances.push(...canvas);
     flush();
   } else {
     toast(
-      "detected cc.director is not already, next please click refresh!",
+      "cc.director is not already, now launch game, click refresh or reload devPanel!",
       "warn"
     );
   }
@@ -323,21 +322,28 @@ function capture(instance, index, list) {
     captureCount++;
   }
 
-  instance.__POTATO_DEVTOOLS_UID__ = getUniqueID(instance);
-
-  if (captureIds.has(instance.__POTATO_DEVTOOLS_UID__)) {
+  if (captureIds.has(instance.__instanceId)) {
     return;
   } else {
-    captureIds.set(instance.__POTATO_DEVTOOLS_UID__, undefined);
+    captureIds.set(instance.__instanceId, undefined);
   }
+
+  captureScaleXs.set(
+    instance.__instanceId,
+    walkParentScale(instance, "scaleX")
+  );
+
+  captureScaleYs.set(
+    instance.__instanceId,
+    walkParentScale(instance, "scaleY")
+  );
 
   const name = instance.name ? instance.name : "AnonymousNode";
 
   mark(instance);
 
   const ret = {
-    uid: instance.__instanceId,
-    id: instance.__POTATO_DEVTOOLS_UID__,
+    id: instance.__instanceId,
     name,
     inactive: !instance.active,
     children: instance.children.map(capture).filter(Boolean)
@@ -353,13 +359,22 @@ function capture(instance, index, list) {
   return ret;
 }
 
+function walkParentScale(node, property) {
+  let accumulation = node[property];
+  if (node._parent) {
+    accumulation *= walkParentScale(node._parent, property);
+  }
+  return accumulation;
+}
+
+// eslint-disable-next-line no-unused-vars
 function getUniqueID(instance) {
   return `${rootInstanceId}:${instance.__instanceId}`;
 }
 
 function mark(instance) {
-  if (!instanceMap.has(instance.__POTATO_DEVTOOLS_UID__)) {
-    instanceMap.set(instance.__POTATO_DEVTOOLS_UID__, instance);
+  if (!instanceMap.has(instance.__instanceId)) {
+    instanceMap.set(instance.__instanceId, instance);
   }
 }
 
@@ -384,6 +399,40 @@ function setInstanceData({ id, path, value }) {
       console.error(error);
     }
   }
+}
+
+export function getInstanceRect(instance) {
+  if(!isBrowser) return; //TODO
+  if(!instance) return;
+  if(!rootInstance.root) return;
+
+  const instanceRect = {};
+
+  const rootScaleX = captureScaleXs.get(rootInstance.root.__instanceId);
+  const rootScaleY = captureScaleYs.get(rootInstance.root.__instanceId);
+
+  const canvas = document.getElementsByTagName('canvas');
+  const canvasRect = canvas[0].getBoundingClientRect()
+
+  //TODO: anchor transform.
+  //TODO: rotation solution.
+  const { width, height } = instance;
+  const __POTATO_DEVTOOLS_SELECTOR_SCALEX__= captureScaleXs.get(instance.__instanceId);
+  const __POTATO_DEVTOOLS_SELECTOR_SCALEY__ = captureScaleYs.get(instance.__instanceId);
+  const widthT = width * __POTATO_DEVTOOLS_SELECTOR_SCALEX__;
+  const heightT = height * __POTATO_DEVTOOLS_SELECTOR_SCALEY__;
+  const { x, y } = instance.parent.convertToWorldSpaceAR({ x: instance.x, y: instance.y });
+
+  const widthRatio = canvasRect.width / (rootInstance.root.width * rootScaleX);
+  const heightRatio = canvasRect.height / (rootInstance.root.height * rootScaleY);
+  const relativeY = (rootInstance.root.height * rootScaleY) - y;
+
+  instanceRect.width = widthT * widthRatio;
+  instanceRect.height = heightT * heightRatio;
+  instanceRect.left = x * widthRatio + canvasRect.left - instanceRect.width / 2;
+  instanceRect.top = relativeY * heightRatio + canvasRect.top - instanceRect.height / 2;
+
+  return instanceRect;
 }
 
 function initRightClick() {

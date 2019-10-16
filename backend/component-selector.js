@@ -3,13 +3,17 @@
  */
 
 import { highLight, unHighLight } from "./highlighter";
+import { getInstanceRect } from "backend";
 import { isBrowser } from "shared/env";
 import throttle from "lodash.throttle";
 
 export default class ComponentSelector {
-  constructor(bridge, instanceMap) {
+  constructor(bridge, instanceMap, rootInstance, captureScaleXs, captureScaleYs) {
     this.bridge = bridge;
     this.instanceMap = instanceMap;
+    this.rootInstance = rootInstance;
+    this.captureScaleXs = captureScaleXs;
+    this.captureScaleYs = captureScaleYs;
     this.bindMethods();
     this.canvas = null;
 
@@ -37,7 +41,7 @@ export default class ComponentSelector {
     window.removeEventListener("mouseleave", this.cancelEvent, true);
     window.removeEventListener("mousedown", this.cancelEvent, true);
     window.removeEventListener("mouseup", this.cancelEvent, true);
-    this.canvas.removeEventListener("mousemove", this.canvasMove, true);
+    this.canvas && this.canvas.removeEventListener("mousemove", this.canvasMove, true);
 
     unHighLight();
   }
@@ -57,7 +61,7 @@ export default class ComponentSelector {
     this.cancelEvent(e);
 
     if (this.selectedInstance) {
-      this.bridge.send("inspect-instance", this.selectedInstance.__POTATO_DEVTOOLS_UID__);
+      this.bridge.send("inspect-instance", this.selectedInstance.__instanceId);
     } else {
       this.bridge.send("stop-component-selector");
     }
@@ -74,7 +78,7 @@ export default class ComponentSelector {
     unHighLight();
 
     if (this.selectedInstance) {
-      highLight(this.selectedInstance);
+      highLight(this.selectedInstance, getInstanceRect(this.selectedInstance));
     }
   }
 
@@ -115,14 +119,14 @@ export default class ComponentSelector {
   filterQualifiedNodes(p) {
     const values = this.instanceMap.values();
     const nodes = Array.from(values);
-    const ratio = this.getDynamicRatio(nodes[0]);
+    const ratio = this.getDynamicRatio();
+
+    if(!ratio) return [];
 
     return nodes.filter(node => {
       const { x, y, width, height } = node;
-      const {
-        __POTATO_DEVTOOLS_SELECTOR_SCALEX__,
-        __POTATO_DEVTOOLS_SELECTOR_SCALEY__
-      } = node;
+      const __POTATO_DEVTOOLS_SELECTOR_SCALEX__= this.captureScaleXs.get(node.__instanceId);
+      const __POTATO_DEVTOOLS_SELECTOR_SCALEY__ = this.captureScaleYs.get(node.__instanceId);
       const worldPosition = node.parent.convertToWorldSpaceAR({ x, y });
       const rect = {
         x: worldPosition.x,
@@ -134,10 +138,13 @@ export default class ComponentSelector {
     });
   }
 
-  getDynamicRatio(instance) {
-    const rootInstance = instance.$rootParent;
-    const ratioW = this.canvasRect.width / (rootInstance.width * rootInstance.__POTATO_DEVTOOLS_SELECTOR_SCALEX__);
-    const ratioH = this.canvasRect.height / (rootInstance.height * rootInstance.__POTATO_DEVTOOLS_SELECTOR_SCALEY__);
+  getDynamicRatio() {
+    if(!this.rootInstance.root) return;
+
+    const __POTATO_DEVTOOLS_SELECTOR_SCALEX__= this.captureScaleXs.get(this.rootInstance.root.__instanceId);
+    const __POTATO_DEVTOOLS_SELECTOR_SCALEY__ = this.captureScaleYs.get(this.rootInstance.root.__instanceId);
+    const ratioW = this.canvasRect.width / (this.rootInstance.root.width * __POTATO_DEVTOOLS_SELECTOR_SCALEX__);
+    const ratioH = this.canvasRect.height / (this.rootInstance.root.height * __POTATO_DEVTOOLS_SELECTOR_SCALEY__);
     return { ratioW, ratioH };
   }
   //TODO: adjustSize = ...parent.scale * self.scale * self.size.
