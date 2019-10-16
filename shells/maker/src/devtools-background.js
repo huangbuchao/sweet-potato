@@ -29,7 +29,7 @@ function createPanelIfHasCC() {
       clearInterval(clearCCInterval);
       created = true;
       chrome.devtools.panels.create(
-        "CC",
+        "Potato",
         "icons/128.png",
         "devtools.html",
         panel => {

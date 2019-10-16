@@ -1,5 +1,5 @@
 <template>
-    <div class="test">Traval</div>
+    <div class="test">Travel</div>
 </template>
 
 <style lang="stylus" scoped>
