@@ -18,6 +18,7 @@ let captureCount = 0;
 let currentInspectedId;
 let rootInstances = [];
 const rootInstance = {};
+let consoleInstances = Array(5);
 
 const captureScaleXs = new Map();
 const captureScaleYs = new Map();
@@ -59,10 +60,11 @@ function connect(cc) {
     });
 
     bridge.on("select-instance", id => {
-      currentInspectedId = id;
       const instance = findInstance(id);
+      currentInspectedId = id;
 
       if (instance) {
+        bindShortcutToConsole(instance);
         flush();
         bridge.send("instance-selected");
       }
@@ -121,14 +123,26 @@ function connect(cc) {
 }
 
 export function findInstance(id) {
-  return instanceMap.get(id);
+  if(!instanceMap.has(id)) {
+    onContextChange();
+    return;
+  }
+
+  const instance = instanceMap.get(id);
+  if(!instance._parent) {
+    onContextChange();
+    return;
+  }
+
+  return instance;
 }
 
 function scan() {
   rootInstances = [];
-  const director = hook.cc.director;
-  const scene = director && director._scene;
-  const canvas = scene && scene.children;
+  const canvas = getCCContext();
+
+  currentInspectedId = null;
+  consoleInstances = Array(5);
 
   if (canvas && canvas.length !== 0) {
     rootInstanceId = canvas && canvas[0].__instanceId;
@@ -150,6 +164,13 @@ function scan() {
   }
 }
 
+function getCCContext() {
+  const director = hook.cc.director;
+  const scene = director && director._scene;
+  const canvas = scene && scene.children;
+  return canvas;
+}
+
 // eslint-disable-next-line no-unused-vars
 function walk(node, fnc) {
   if (node.children) {
@@ -164,6 +185,13 @@ function walk(node, fnc) {
 }
 
 function flush() {
+  if(currentInspectedId) {
+    if (instanceDestroyed(currentInspectedId)) {
+      scan();
+      return
+    }
+  }
+
   let start;
   captureIds.clear();
 
@@ -188,6 +216,18 @@ function flush() {
   bridge.send("flush", payload);
 }
 
+function instanceDestroyed(instance) {
+  if(typeof instance === "number") {
+    const inst = instanceMap.get(instance);
+    return !inst._parent;
+  }
+  return !instance._parent;
+}
+
+function onContextChange() {
+  scan();
+}
+
 function getInstanceDetails(id) {
   const instance = instanceMap.get(id);
   if (!instance) {
@@ -206,6 +246,7 @@ function getInstanceDetails(id) {
 const instanceProperties = [
   "uuid",
   "active",
+  "activeInHierarchy",
   "x",
   "y",
   "anchorX",
@@ -224,6 +265,35 @@ const instanceProperties = [
   "color"
 ];
 
+const targetComponents = {
+  Sprite: [
+    "enabled",
+    "enabledInHierarchy",
+    "type",
+    "sizeMode",
+    "trim",
+    "fillType",
+    "fillRange",
+    "fillStart",
+    "fillCenter",
+    "spriteFrame"
+  ],
+  fillCenter: [
+    "x",
+    "y"
+  ],
+  spriteFrame: [
+    "_name",
+    "_textureFilename",
+    "_texture"
+  ],
+  _texture: [
+    "url",
+    "width",
+    "height"
+  ]
+};
+
 function getInstanceState(instance) {
   return processProperties(instance).concat(
     processComponents(instance),
@@ -233,15 +303,47 @@ function getInstanceState(instance) {
 
 function processComponents(instance) {
   const components = instance._components;
-  return components.map((component, index) => {
+  return components.map(component => {
     const name = component.name.match(/(?:\S+)<(\S+)>/)[1];
     return {
       type: "components",
-      key: `component${index}`,
-      value: name,
+      key: name,
+      value: name === "Sprite" ? captureSprite(component) : captureFunction(component),
       editable: false
     };
   });
+}
+
+function captureSprite(sprite) {
+  const data = {};
+  walkObj(targetComponents.Sprite, data, sprite);
+  return data;
+}
+
+function walkObj(target, data, component) {
+  target.forEach(key => {
+    if(targetComponents[key] && component[key]) {
+      data[key] = {};
+      walkObj(targetComponents[key], data[key], component[key]);
+    }else{
+      data[key] = component[key];
+    }
+  });
+}
+
+// function captureSkeleton() {
+//   return {}
+// }
+
+function captureFunction(component) {
+  if(!component.actions) return {};
+  const actions = {};
+  Object.keys(component.actions).forEach(key => {
+    actions[key] = "function";
+  });
+  return {
+    actions
+  };
 }
 
 function processListeners(instance) {
@@ -275,7 +377,8 @@ function processProperties(instance) {
       editable:
         property !== "uuid" &&
         property !== "color" &&
-        property !== "childrenCount"
+        property !== "childrenCount" &&
+        property !== "activeInHierarchy"
           ? true
           : false
     };
@@ -356,6 +459,9 @@ function capture(instance, index, list) {
   //   ret.top = Infinity;
   // }
 
+  const consoleId = consoleInstances.indexOf(instance.__instanceId);
+  ret.consoleId = consoleId > -1 ? "$h" + consoleId : null;
+
   return ret;
 }
 
@@ -373,9 +479,10 @@ function getUniqueID(instance) {
 }
 
 function mark(instance) {
-  if (!instanceMap.has(instance.__instanceId)) {
-    instanceMap.set(instance.__instanceId, instance);
-  }
+  // if (!instanceMap.has(instance.__instanceId)) {
+  //   instanceMap.set(instance.__instanceId, instance);
+  // }
+  instanceMap.set(instance.__instanceId, instance);
 }
 
 export function getCustomInstanceDetails() {}
@@ -390,7 +497,7 @@ export function inspectInstance() {}
 export function scrollToInstance() {}
 
 function setInstanceData({ id, path, value }) {
-  const instance = instanceMap.get(id);
+  const instance = findInstance(id)
   if (instance) {
     try {
       const parseValue = parse(value);
@@ -444,4 +551,38 @@ function initRightClick() {
     window.__POTATO_DEVTOOLS_CONTEXT_MENU_HAS_TARGET__ = null;
     window.__POTATO_DEVTOOLS_CONTEXT_MENU_TARGET__ = null;
   });
+}
+
+function bindShortcutToConsole(instance) {
+  if(!instance) return;
+  if(!isBrowser) return;
+
+  const id = instance.__instanceId;
+  const index = consoleInstances.indexOf(id);
+
+  if(index > -1) {
+    consoleInstances.splice(index, 1);
+  }else{
+    consoleInstances.pop();
+  }
+
+  consoleInstances.unshift(id);
+
+  for (let i = 0; i < 5; i++) {
+    window["$h" + i] = instanceMap.get(consoleInstances[i]);
+  }
+  window["$h"] = instance;
+}
+
+window["$hh"] = function (arg) {
+  if(typeof arg === "number") {
+    return instanceMap.get(arg);
+  }
+  if(typeof arg === "string") {
+    return Array.from(instanceMap.values()).filter(node => node.name === arg || node.uuid === arg);
+  }
+  if(Object.prototype.toString.call(arg) === "[object RegExp]") {
+    return Array.from(instanceMap.values()).filter(node => arg.test(node.name));
+  }
+  return null;
 }

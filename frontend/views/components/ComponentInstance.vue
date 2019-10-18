@@ -40,6 +40,14 @@
         <span class="angle-bracket"></span>
       </span>
 
+      <span
+        v-if="instance.consoleId"
+        v-tooltip="$t('ComponentInstance.consoleId.tooltip', { id: instance.consoleId })"
+        class="info console"
+      >
+        == {{ instance.consoleId }}
+      </span>
+
       <span class="spacer" />
 
       <VueIcon

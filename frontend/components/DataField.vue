@@ -341,7 +341,7 @@ export default {
       } else if (this.valueType === 'array') {
         return 'Array[' + value.length + ']'
       } else if (this.valueType === 'plain-object') {
-        return 'Object' + (Object.keys(value).length ? '' : ' (empty)')
+        return 'Object' + (Object.keys(value).length ? '' : ' (pending)')
       } else if (this.valueType.includes('native')) {
         return escape(specialTypeRE.exec(value)[2])
       } else if (typeof value === 'string') {

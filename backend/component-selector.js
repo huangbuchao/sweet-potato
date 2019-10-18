@@ -124,6 +124,7 @@ export default class ComponentSelector {
     if(!ratio) return [];
 
     return nodes.filter(node => {
+      if(!node._parent) return false;
       const { x, y, width, height } = node;
       const __POTATO_DEVTOOLS_SELECTOR_SCALEX__= this.captureScaleXs.get(node.__instanceId);
       const __POTATO_DEVTOOLS_SELECTOR_SCALEY__ = this.captureScaleYs.get(node.__instanceId);
