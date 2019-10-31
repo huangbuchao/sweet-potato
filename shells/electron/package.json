@@ -1,0 +1,30 @@
+{
+    "name": "potato-remote-devtools",
+    "version": "1.0.0",
+    "description": "StandAlone Cocos Devtools",
+    "bin": {
+      "potato-devtools": "./cli.js"
+    },
+    "main": "main.js",
+    "scripts": {
+      "cache-clean": "rm -rf ./node_modules && rm -rf ./build",
+      "dev": "node cli.js",
+      "watch": "webpack --watch --hide-modules",
+      "preinstall": "echo \"no install job\"",
+      "build": "webpack",
+      "prepublish": "npm run build",
+      "pretest": "npm run cache-clean",
+      "test": "standard"
+    },
+    "dependencies": {
+      "electron": "^2.0.0",
+      "express": "^4.17.1",
+      "ip": "^1.1.5",
+      "socket.io": "^2.3.0"
+    },
+    "devDependencies": {
+      "webpack": "^4.19.0",
+      "webpack-cli": "^3.1.0",
+      "standard": "^14.3.1"
+    }
+  }

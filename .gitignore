@@ -2,15 +2,6 @@ library/
 temp/
 local/
 build/
-shells/dev/build/
-shells/chrome/build/
-shells/firefox/build/
-shells/electron/build/
-packages/sweet-potato-game/library/
-packages/sweet-potato-game/temp/
-packages/sweet-potato-game/node_modules/
-packages/sweet-potato-game/local/
-packages/cocos-compiler/node_modules/
 
 # Logs
 logs

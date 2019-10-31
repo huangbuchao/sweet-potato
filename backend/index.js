@@ -6,7 +6,7 @@ import { target, isBrowser } from "shared/env";
 // eslint-disable-next-line no-unused-vars
 import { highLight, unHighLight } from "./highlighter";
 import ComponentSelector from "./component-selector";
-import { stringify, parse, set, flatten } from "../shared/util";
+import { stringify, parse, set, flatten, getCustomFunctionDetails } from "../shared/util";
 import { init as initStorage } from "../shared/storage";
 //import SharedData, { init as initSharedData } from "../shared/shared-data";
 import { installToast } from "./toast";
@@ -339,7 +339,7 @@ function captureFunction(component) {
   if(!component.actions) return {};
   const actions = {};
   Object.keys(component.actions).forEach(key => {
-    actions[key] = "function";
+    actions[key] = getCustomFunctionDetails(component.actions[key]);
   });
   return {
     actions
