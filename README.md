@@ -41,6 +41,15 @@ npm run dev
 
 now open `http://localhost:8024` in your broswer.
 
+## Shortcut Directive
+
+Input follow shortcut directives in the **Console Pane** to get a node context directly.
+
+1. `$h` = current selected node.
+2. `$h0` = `$h`
+3. `$h1`-`$h4` = previously selected nodes.
+4. `$hh(string | regexp | uuid)` This function will return a array contained qualified nodes.
+
 ## FAQ
 
 :jack_o_lantern:

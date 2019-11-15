@@ -3,12 +3,13 @@
 "use strict"
 
 const chalk = require("chalk");
-const AmdZip = require("adm-zip");
+const archiver = require("archiver");
 const logUpdate = require("log-update");
 const { dots } = require("cli-spinners");
 const { join, relative } = require("path");
 const { exec } = require("child-process-promise");
 const { copy, ensureDir, move, remove } = require("fs-extra");
+const { createWriteStream } = require("fs");
 
 const STATIC_FILES = [
   "icons",
@@ -65,9 +66,16 @@ const build = async (tempPath, manifestPath) => {
     STATIC_FILES.map(file => copy(join(__dirname, file), join(zipPath, file)))
   );
 
-  const zip = new AmdZip();
-  zip.addLocalFolder(zipPath);
-  zip.writeZip(join(tempPath, "PotatoDevTools.zip"));
+  const archive = archiver("zip", { zip: { level: 9 } });
+  const zipStream = createWriteStream(join(tempPath, "PotatoDevTools.zip"));
+  await new Promise(function(resolve, reject) {
+    archive
+      .directory(zipPath, false)
+      .on("error", err => reject(err))
+      .pipe(zipStream);
+    archive.finalize();
+    zipStream.on("close", () => resolve());
+  });
 }
 
 const postProcess = async (tempPath, destinationPath) => {

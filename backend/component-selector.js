@@ -135,7 +135,7 @@ export default class ComponentSelector {
         width: width * __POTATO_DEVTOOLS_SELECTOR_SCALEX__,
         height: height * __POTATO_DEVTOOLS_SELECTOR_SCALEY__
       };
-      return this.isContained(p, rect, ratio);
+      return node.active && node.activeInHierarchy && node._components.length !== 0 && this.isContained(p, rect, ratio);
     });
   }
 
