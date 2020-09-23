@@ -8,7 +8,7 @@
     "main": "main.js",
     "scripts": {
       "cache-clean": "rm -rf ./node_modules && rm -rf ./build",
-      "dev": "node cli.js",
+      "dev": "node cli.js --inspect=5858",
       "watch": "webpack --watch --hide-modules",
       "preinstall": "echo \"no install job\"",
       "build": "webpack",
