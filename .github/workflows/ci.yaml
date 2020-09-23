@@ -1,5 +1,5 @@
 # this ci/cd workflow was not completed.
-name: Node.js CI
+name: ci
 
 on:
   push:

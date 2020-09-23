@@ -2,7 +2,7 @@
 
 provide two applications: Chrome Extension and [Standalone](./shells/electron/README.md) (based on electron).
 
-[![Build Status](https://github.com/huangbuchao/sweet-potato/workflows/ci%20status/badge.svg?branch=master&event=push)](https://github.com/huangbuchao/sweet-potato/actions)
+[![Build Status](https://github.com/huangbuchao/sweet-potato/workflows/ci/badge.svg?branch=master&event=push)](https://github.com/huangbuchao/sweet-potato/actions)
 
 # Instruction :christmas_tree:
 
